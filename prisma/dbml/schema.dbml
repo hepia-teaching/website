@@ -1,0 +1,128 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  email String [unique, not null]
+  role Role [not null]
+  Teaching Teaching [not null]
+  Learning Learning [not null]
+  Assignements Assignements [not null]
+}
+
+Table Field {
+  id Int [pk, increment]
+  name String [not null]
+  courses Course [not null]
+}
+
+Table Room {
+  id Int [pk, increment]
+  number String [unique, not null]
+  courses Course [not null]
+}
+
+Table Course {
+  room Room [not null]
+  roomId Int [not null]
+  field Field [not null]
+  fieldId Int [not null]
+  semester Semester [not null]
+  year Int [not null]
+  season Season [not null]
+  description String [not null]
+  Teaching Teaching [not null]
+  Learning Learning [not null]
+  Assignements Assignements [not null]
+
+  indexes {
+    (roomId, fieldId, year, season) [pk]
+  }
+}
+
+Table Teaching {
+  teacher User [not null]
+  teacherId Int [not null]
+  course Course [not null]
+  roomId Int [not null]
+  fieldId Int [not null]
+  year Int [not null]
+  season Season [not null]
+
+  indexes {
+    (teacherId, roomId, fieldId, year, season) [pk]
+  }
+}
+
+Table Learning {
+  student User [not null]
+  studentId Int [not null]
+  course Course [not null]
+  roomId Int [not null]
+  fieldId Int [not null]
+  year Int [not null]
+  season Season [not null]
+
+  indexes {
+    (studentId, roomId, fieldId, year, season) [pk]
+  }
+}
+
+Table Assignements {
+  student User [not null]
+  studentId Int [not null]
+  course Course [not null]
+  roomId Int [not null]
+  fieldId Int [not null]
+  year Int [not null]
+  season Season [not null]
+  startDate DateTime [not null]
+  endDate DateTime
+  description String [not null]
+  estimated_time Int [not null]
+
+  indexes {
+    (studentId, roomId, fieldId, year, season) [pk]
+  }
+}
+
+Table Semester {
+  year Int [not null]
+  season Season [not null]
+  name String [not null]
+  courses Course [not null]
+
+  indexes {
+    (year, season) [pk]
+  }
+}
+
+Enum Role {
+  Admin
+  Teacher
+  Student
+}
+
+Enum Season {
+  Automn
+  Spring
+}
+
+Ref: Course.roomId > Room.id
+
+Ref: Course.fieldId > Field.id
+
+Ref: Course.(year, season) > Semester.(year, season)
+
+Ref: Teaching.teacherId > User.id
+
+Ref: Teaching.(roomId, fieldId, year, season) > Course.(roomId, fieldId, year, season)
+
+Ref: Learning.studentId > User.id
+
+Ref: Learning.(roomId, fieldId, year, season) > Course.(roomId, fieldId, year, season)
+
+Ref: Assignements.studentId > User.id
+
+Ref: Assignements.(roomId, fieldId, year, season) > Course.(roomId, fieldId, year, season)

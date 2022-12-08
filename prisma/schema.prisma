@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  role         Role
+  Teaching     Teaching[]
+  Learning     Learning[]
+  Assignements Assignements[]
+}
+
+enum Role {
+  Admin
+  Teacher
+  Student
+}
+
+model Field {
+  id      Int      @id @default(autoincrement())
+  name    String
+  courses Course[]
+}
+
+model Room {
+  id      Int      @id @default(autoincrement())
+  number  String   @unique
+  courses Course[]
+}
+
+model Course {
+  room         Room           @relation(fields: [roomId], references: [id])
+  roomId       Int
+  field        Field          @relation(fields: [fieldId], references: [id])
+  fieldId      Int
+  semester     Semester       @relation(fields: [year, season], references: [year, season])
+  year         Int
+  season       Season
+  description  String
+  Teaching     Teaching[]
+  Learning     Learning[]
+  Assignements Assignements[]
+
+  @@id([roomId, fieldId, year, season])
+}
+
+model Teaching {
+  teacher   User   @relation(fields: [teacherId], references: [id])
+  teacherId Int
+  course    Course @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
+  roomId    Int
+  fieldId   Int
+  year      Int
+  season    Season
+
+  @@id([teacherId, roomId, fieldId, year, season])
+}
+
+model Learning {
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId Int
+  course    Course @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
+  roomId    Int
+  fieldId   Int
+  year      Int
+  season    Season
+
+  @@id([studentId, roomId, fieldId, year, season])
+}
+
+model Assignements {
+  student        User      @relation(fields: [studentId], references: [id])
+  studentId      Int
+  course         Course    @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
+  roomId         Int
+  fieldId        Int
+  year           Int
+  season         Season
+  startDate      DateTime
+  endDate        DateTime?
+  description    String
+  estimated_time Int
+
+  @@id([studentId, roomId, fieldId, year, season])
+}
+
+model Semester {
+  year    Int
+  season  Season
+  name    String
+  courses Course[]
+
+  @@id([year, season])
+}
+
+enum Season {
+  Automn
+  Spring
+}
