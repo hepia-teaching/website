@@ -1,7 +1,7 @@
-import { z } from "zod"
-import { publicProcedure, router } from "../trpc"
-import { User } from "@prisma/client"
-import { createSchema } from "@/zod/user"
+import { z } from 'zod'
+import { publicProcedure, router } from '../trpc'
+import { User } from '@prisma/client'
+import { createSchema } from '@/zod/user'
 
 const users: User[] = []
 

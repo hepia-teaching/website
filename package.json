@@ -9,6 +9,7 @@
 	},
 	"devDependencies": {
 		"@nuxtjs/tailwindcss": "^6.1.3",
+		"@playwright/test": "^1.28.1",
 		"@types/node": "^18.11.11",
 		"daisyui": "^2.45.0",
 		"nuxt": "3.0.0",

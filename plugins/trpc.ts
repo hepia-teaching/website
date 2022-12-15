@@ -1,11 +1,11 @@
-import { httpBatchLink, createTRPCProxyClient } from "@trpc/client"
-import type { AppRouter } from "@/server/trpc/routers"
+import { httpBatchLink, createTRPCProxyClient } from '@trpc/client'
+import type { AppRouter } from '@/server/trpc/routers'
 
 export default defineNuxtPlugin(() => {
 	const client = createTRPCProxyClient<AppRouter>({
 		links: [
 			httpBatchLink({
-				url: "/api/trpc",
+				url: '/api/trpc',
 
 				/**
 				 * Replace regular `fetch` with a `$fetch` from nuxt

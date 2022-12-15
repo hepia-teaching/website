@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Role, User } from "@prisma/client"
-import { createSchema } from "@/zod/user"
+import { Role, User } from '@prisma/client'
+import { createSchema } from '@/zod/user'
 
 const { $trpc } = useNuxtApp()
 
 const { values, errors, handleSubmit } = useForm({
 	schema: createSchema,
 	initialValues: {
-		email: "",
+		email: '',
 		role: Role.Student,
 	},
 })
@@ -26,6 +26,12 @@ const submit = handleSubmit(async (values) => {
 
 <template>
 	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
+		<h1
+			data-testid="homepage-title"
+			class="from-indigo-500 via-purple-500 to-pink-500 text-center text-3xl font-bold"
+		>
+			Hepia
+		</h1>
 		<form
 			class="flex flex-col gap-3 rounded-lg bg-base-200 p-3 shadow-lg"
 			@submit.prevent="submit"

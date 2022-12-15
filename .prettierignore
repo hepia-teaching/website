@@ -4,3 +4,5 @@ coverage
 .nuxt
 .output
 node_modules
+tests-examples
+playwright-report
