@@ -4,10 +4,10 @@ import { createSchema } from '@/zod/user'
 
 const { $trpc } = useNuxtApp()
 
-const { values, errors, handleSubmit } = useForm({
+const { values, errors, handleSubmit, reset } = useForm({
 	schema: createSchema,
 	initialValues: {
-		email: '',
+		email: 'lmao',
 		role: Role.Student,
 	},
 })
@@ -21,6 +21,7 @@ onMounted(async () => {
 const submit = handleSubmit(async (values) => {
 	const user = await $trpc.user.create.mutate(values)
 	users.value.push(user)
+	reset()
 })
 </script>
 
@@ -38,7 +39,11 @@ const submit = handleSubmit(async (values) => {
 		>
 			<div class="form-control w-full">
 				<label class="label">
-					<span class="label-text">Email</span>
+					<span
+						class="label-text"
+						:class="{ 'text-error': errors.email }"
+						>Email</span
+					>
 				</label>
 				<input
 					class="input-bordered input w-full"
@@ -46,6 +51,13 @@ const submit = handleSubmit(async (values) => {
 					type="text"
 					v-model="values.email"
 				/>
+				<label
+					class="label"
+					v-if="errors.email"
+				>
+					<span class="label-text-alt text-error">{{ errors.email }}</span>
+				</label>
+				<p></p>
 			</div>
 			<div class="form-control w-full">
 				<label class="label">
