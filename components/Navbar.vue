@@ -19,7 +19,7 @@ const items = computed(() => {
 				to: '/rooms',
 				text: 'Rooms',
 			},
-            {
+			{
 				to: '/semesters',
 				text: 'Semesters',
 			},
