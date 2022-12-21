@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: [],
+	content: ['./formkit.config.ts'],
 	theme: {
 		extend: {},
 	},
-	plugins: [require('daisyui')],
+	plugins: [require('daisyui'), require('@formkit/themes/tailwindcss')],
 }
