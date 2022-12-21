@@ -6,7 +6,9 @@
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare",
-		"test": "npx playwright test"
+		"test": "npx playwright test",
+		"check": "npx prettier . --check",
+		"fix": "npx prettier . --write"
 	},
 	"devDependencies": {
 		"@nuxtjs/tailwindcss": "^6.1.3",
