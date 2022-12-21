@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { Course, Role, User } from '@prisma/client'
 import { PureAbility, AbilityBuilder } from '@casl/ability'
 import { PrismaQuery, Subjects } from '@casl/prisma'
 import { createPrismaAbility } from './prisma'
@@ -9,22 +9,40 @@ export function defineAbilityFor(user: User | null) {
 			'read' | 'create' | 'update' | 'delete',
 			Subjects<{
 				User: User
+				Course: Course
 			}>
 		],
 		PrismaQuery
 	>
 
-	const { can, cannot, build } = new AbilityBuilder<AppAbility>(
-		createPrismaAbility
-	)
+	type DefinePermissions = (
+		user: User,
+		builder: AbilityBuilder<AppAbility>
+	) => void
 
-	can('read', 'User')
-	can('create', 'User')
-
-	if (user) {
-		can('update', 'User', { email: user.email })
-		can('delete', 'User', { email: user.email })
+	const rolePermissions: Record<Role, DefinePermissions> = {
+		Student(user, { can }) {
+			can('read', 'User', { email: user.email })
+		},
+		Teacher(user, { can }) {
+			can('read', 'User')
+			can('create', 'Course')
+		},
+		Admin(user, { can }) {
+			can('read', 'User')
+			can('create', 'Course')
+		},
 	}
 
-	return build()
+	const builder = new AbilityBuilder<AppAbility>(createPrismaAbility)
+
+	if (user) {
+		if (typeof rolePermissions[user.role] === 'function') {
+			rolePermissions[user.role](user, builder)
+		} else {
+			throw new Error(`Trying to use unknown role "${user.role}"`)
+		}
+	}
+
+	return builder.build()
 }

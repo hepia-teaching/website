@@ -45,7 +45,10 @@ async function submit(values: z.infer<typeof createSchema>) {
 <template>
 	<ul class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
 		<FancyTitle>Courses</FancyTitle>
-		<ZodForm @submit="submit">
+		<ZodForm
+			v-if="$can('create', 'Course')"
+			@submit="submit"
+		>
 			<ZodKit
 				name="roomId"
 				type="select"
