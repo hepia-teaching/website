@@ -12,8 +12,9 @@ export default createConfig({
 				outer: 'mb-5',
 				input: 'select select-bordered w-full',
 			},
-			button: {
-				input: 'btn btn-primary',
+			number: {
+				outer: 'mb-5',
+				input: 'input input-bordered w-full',
 			},
 		}),
 	},

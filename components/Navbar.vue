@@ -8,6 +8,22 @@ const items = computed(() => {
 		items = [
 			...items,
 			{
+				to: '/courses',
+				text: 'Courses',
+			},
+			{
+				to: '/fields',
+				text: 'Fields',
+			},
+			{
+				to: '/rooms',
+				text: 'Rooms',
+			},
+            {
+				to: '/semesters',
+				text: 'Semesters',
+			},
+			{
 				to: '/me',
 				text: 'Me',
 			},
@@ -35,7 +51,7 @@ const items = computed(() => {
 </script>
 
 <template>
-	<div class="navbar bg-base-100">
+	<div class="navbar border-b bg-base-100">
 		<div class="flex-1">
 			<NuxtLink
 				to="/"
