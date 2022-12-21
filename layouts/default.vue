@@ -1,5 +1,6 @@
 <template>
-	<main class="h-screen bg-base-100">
+	<Navbar />
+	<main>
 		<slot />
 	</main>
 </template>
