@@ -15,8 +15,18 @@ export const createContext = async (event: H3Event) => {
 
 		if (token) {
 			const secret = new TextEncoder().encode('secret')
-			const { payload } = await jose.jwtVerify(token, secret)
-			return payload as User
+
+			try {
+				const { payload } = await jose.jwtVerify(token, secret)
+				return payload as User
+			} catch (e) {
+				if (e instanceof jose.errors.JWTExpired) {
+					deleteCookie(event, 'auth_token')
+					return null
+				}
+
+				throw e
+			}
 		}
 
 		return null

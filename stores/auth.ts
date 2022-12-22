@@ -3,6 +3,7 @@ import { defineAbilityFor } from '@/casl'
 import * as jose from 'jose'
 import { loginSchema } from '@/zod/auth'
 import { z } from 'zod'
+import { TRPCError } from '@trpc/server'
 
 export const useAuthStore = defineStore('auth', () => {
 	const user = ref<User | null>(null)
@@ -21,8 +22,21 @@ export const useAuthStore = defineStore('auth', () => {
 
 	async function logout() {
 		const { $trpc } = useNuxtApp()
-		await $trpc.auth.logout.mutate()
-		user.value = null
+
+		try {
+			await $trpc.auth.logout.mutate()
+			user.value = null
+		} catch (e) {
+			if (e instanceof TRPCError) {
+				if (e.code === 'FORBIDDEN') {
+					// we're already logged out
+					user.value = null
+					return
+				}
+			}
+
+			throw e
+		}
 	}
 
 	const ability = computed(() => defineAbilityFor(user.value))
