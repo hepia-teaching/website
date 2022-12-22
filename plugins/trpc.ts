@@ -1,4 +1,4 @@
-import { httpBatchLink, createTRPCProxyClient } from '@trpc/client'
+import { httpBatchLink, createTRPCProxyClient, loggerLink } from '@trpc/client'
 import type { AppRouter } from '@/server/trpc/routers'
 
 export default defineNuxtPlugin(() => {
@@ -6,6 +6,11 @@ export default defineNuxtPlugin(() => {
 
 	const client = createTRPCProxyClient<AppRouter>({
 		links: [
+			loggerLink({
+				enabled: (opts) =>
+					process.env.NODE_ENV === 'development' ||
+					(opts.direction === 'down' && opts.result instanceof Error),
+			}),
 			httpBatchLink({
 				url: '/api/trpc',
 
