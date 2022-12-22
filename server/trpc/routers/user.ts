@@ -1,16 +1,34 @@
 import { protectedProcedure, publicProcedure, router } from '../trpc'
-import { createSchema } from '@/zod/user'
-import { loginSchema } from '~~/zod/auth'
+import { createSchema, listSchema } from '@/zod/user'
+import { loginSchema } from '@/zod/auth'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
 export const userRouter = router({
-	list: publicProcedure.query(({ ctx }) => {
-		return ctx.prisma.user.findMany()
+	list: publicProcedure.input(listSchema).query(async ({ input, ctx }) => {
+		const users = await ctx.prisma.user.findMany({
+			where: input,
+		})
+
+		return users
 	}),
 	create: publicProcedure
 		.input(createSchema)
 		.mutation(async ({ input, ctx }) => {
+			if (
+				ctx.ability.cannot(
+					'create',
+					subject('User', {
+						id: 0,
+						...input,
+					})
+				)
+			) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
 			const user = await ctx.prisma.user.create({
 				data: input,
 			})
@@ -34,7 +52,7 @@ export const userRouter = router({
 
 			if (ctx.ability.cannot('delete', subject('User', user))) {
 				throw new TRPCError({
-					code: 'UNAUTHORIZED',
+					code: 'FORBIDDEN',
 				})
 			}
 

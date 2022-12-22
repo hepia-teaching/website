@@ -11,3 +11,10 @@ export const createSchema = z.object({
 export const deleteSchema = z.object({
 	email,
 })
+
+export const listSchema = z
+	.object({
+		role: z.nativeEnum(Role),
+	})
+	.partial()
+	.optional()

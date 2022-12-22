@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { createSchema } from '@/zod/course'
 import { z } from 'zod'
+import { createSchema } from '@/zod/course'
 
 const { $trpc } = useNuxtApp()
 
@@ -8,17 +8,12 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
 })
 
-const [
-	{ data: courses, refresh },
-	{ data: rooms },
-	{ data: fields },
-	{ data: semesters },
-] = await Promise.all([
-	useAsyncData(() => $trpc.course.list.query()),
-	useAsyncData(() => $trpc.room.list.query()),
-	useAsyncData(() => $trpc.field.list.query()),
-	useAsyncData(() => $trpc.semester.list.query()),
-])
+const [{ data: rooms }, { data: fields }, { data: semesters }] =
+	await Promise.all([
+		useAsyncData(() => $trpc.room.list.query()),
+		useAsyncData(() => $trpc.field.list.query()),
+		useAsyncData(() => $trpc.semester.list.query()),
+	])
 
 const roomsOptions = rooms.value?.map((room) => ({
 	label: room.number,
@@ -37,51 +32,37 @@ const semestersOptions = semesters.value?.map((semester) => ({
 
 async function submit(values: z.infer<typeof createSchema>) {
 	await $trpc.course.create.mutate(values)
-	await refresh()
 	reset()
 }
 </script>
 
 <template>
-	<ul class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
-		<FancyTitle>Courses</FancyTitle>
+	<div class="flex flex-col gap-3">
+		<FancyTitle>Create a course</FancyTitle>
 		<ZodForm
 			v-if="$can('create', 'Course')"
 			@submit="submit"
 		>
 			<ZodKit
+				label="Room"
 				name="roomId"
 				type="select"
 				:options="roomsOptions"
 			/>
 
 			<ZodKit
+				label="Field"
 				name="fieldId"
 				type="select"
 				:options="fieldsOptions"
 			/>
 
 			<ZodKit
+				label="Semester"
 				name="semester"
 				type="select"
 				:options="semestersOptions"
 			/>
 		</ZodForm>
-		<li
-			class="flex flex-col gap-3"
-			v-for="(course, key) in courses"
-			:key="key"
-		>
-			<div class="card w-96 bg-base-100 shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title">
-						{{ course.description ?? `${course.field.name}` }}
-					</h2>
-					<div class="card-actions justify-end">
-						<button class="btn-primary btn">View</button>
-					</div>
-				</div>
-			</div>
-		</li>
-	</ul>
+	</div>
 </template>

@@ -1,19 +1,55 @@
 import { protectedProcedure, router } from '../trpc'
-import { createSchema } from '@/zod/course'
+import { createSchema, getSchema } from '@/zod/course'
 import { TRPCError } from '@trpc/server'
+import { subject } from '@casl/ability'
 
 export const courseRouter = router({
 	list: protectedProcedure.query(({ ctx }) => {
 		return ctx.prisma.course.findMany({
 			include: {
 				field: true,
+				room: true,
 			},
 		})
+	}),
+	myCourses: protectedProcedure.query(async ({ ctx }) => {
+		const courses = await ctx.prisma.course.findMany({
+			where: {
+				teaching: {
+					some: {
+						teacherId: ctx.user.id,
+					},
+				},
+			},
+		})
+
+		return courses
+	}),
+	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
+		const course = await ctx.prisma.course.findUnique({
+			where: {
+				roomId_fieldId_year_season: input,
+			},
+		})
+
+		if (!course) {
+			throw new TRPCError({
+				code: 'NOT_FOUND',
+			})
+		}
+
+		if (ctx.ability.cannot('read', subject('Course', course))) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
+		return course
 	}),
 	create: protectedProcedure.input(createSchema).mutation(({ input, ctx }) => {
 		if (ctx.ability.cannot('create', 'Course')) {
 			throw new TRPCError({
-				code: 'UNAUTHORIZED',
+				code: 'FORBIDDEN',
 			})
 		}
 

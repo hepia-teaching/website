@@ -1,5 +1,15 @@
+<script setup lang="ts">
+const store = useAuthStore()
+</script>
+
 <template>
-	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
-		<FancyTitle data-testid="homepage-title">Welcome to Hepia</FancyTitle>
-	</div>
+	<Suspense>
+		<template #loading>Loading...</template>
+		<template v-if="store.user">
+			<LazyHomeAdmin v-if="store.user.role === 'Admin'" />
+			<LazyHomeTeacher v-else-if="store.user.role === 'Teacher'" />
+			<div v-else>Welcome, {{ store.user.role }}</div>
+		</template>
+		<LazyHomeAnon v-else />
+	</Suspense>
 </template>

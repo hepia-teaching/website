@@ -9,7 +9,7 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 
 const { $trpc, $toast } = useNuxtApp()
 
-const { data: semesters, refresh } = await useAsyncData('fields', () =>
+const { data: semesters, refresh } = await useAsyncData('semesters', () =>
 	$trpc.semester.list.query()
 )
 

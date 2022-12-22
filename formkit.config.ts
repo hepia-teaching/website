@@ -6,7 +6,8 @@ export default createConfig({
 		classes: generateClasses({
 			text: {
 				outer: 'mb-5',
-				input: 'input input-bordered w-full',
+				input: 'input input-bordered w-full formkit-invalid:input-error',
+				label: 'formkit-invalid:text-error',
 			},
 			select: {
 				outer: 'mb-5',
@@ -15,6 +16,10 @@ export default createConfig({
 			number: {
 				outer: 'mb-5',
 				input: 'input input-bordered w-full',
+			},
+			submit: {
+				outer: 'mb-5',
+				input: 'btn btn-outline w-full',
 			},
 		}),
 	},

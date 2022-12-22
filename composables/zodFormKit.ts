@@ -109,6 +109,7 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 					{
 						type: props.type,
 						name: props.name,
+						label: props.label,
 						validation: '+zod',
 						validationRules: { zod },
 						validationMessages: {

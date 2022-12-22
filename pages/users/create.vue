@@ -3,17 +3,22 @@ import { z } from 'zod'
 import { createSchema } from '@/zod/user'
 import { Role } from '@prisma/client'
 
-const { ZodForm, ZodKit } = useZodFormKit({
+const route = useRoute()
+const role = z.nativeEnum(Role).catch(Role.Student).parse(route.query.role)
+
+const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
+	initialValues: {
+		role,
+	},
 })
 
-const router = useRouter()
 const { $trpc } = useNuxtApp()
 
 async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.user.create.mutate(values)
-		router.push('/login')
+		reset()
 	} catch {
 		alert('error')
 	}
@@ -21,15 +26,16 @@ async function submit(values: z.infer<typeof createSchema>) {
 </script>
 
 <template>
-	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
-		<FancyTitle>Signup</FancyTitle>
+	<div class="flex flex-col gap-3">
+		<FancyTitle>Create user</FancyTitle>
 		<ZodForm @submit="submit">
 			<ZodKit
+				label="Email"
 				type="text"
 				name="email"
 			/>
-
 			<ZodKit
+				label="Role"
 				type="select"
 				name="role"
 				:options="Role"

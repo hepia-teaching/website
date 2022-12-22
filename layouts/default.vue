@@ -1,6 +1,6 @@
 <template>
 	<Navbar />
-	<main class="py-3">
+	<main class="mx-auto max-w-xl py-3">
 		<slot />
 	</main>
 </template>

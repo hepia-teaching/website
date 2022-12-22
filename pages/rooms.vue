@@ -8,7 +8,7 @@ const { ZodForm, ZodKit } = useZodFormKit({
 
 const { $trpc } = useNuxtApp()
 
-const { data: rooms, refresh } = await useAsyncData('fields', () =>
+const { data: rooms, refresh } = await useAsyncData('rooms', () =>
 	$trpc.room.list.query()
 )
 

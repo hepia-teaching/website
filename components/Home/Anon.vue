@@ -15,7 +15,7 @@ const router = useRouter()
 async function submit(values: z.infer<typeof loginSchema>) {
 	try {
 		await store.login(values)
-		router.push('/me')
+		router.push('/')
 	} catch {
 		alert('error')
 	}
