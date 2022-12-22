@@ -17,6 +17,10 @@ export default createConfig({
 				outer: 'mb-5',
 				input: 'input input-bordered w-full',
 			},
+            textarea: {
+                outer: 'mb-5',
+				input: 'textarea textarea-bordered w-full',
+            },
 			submit: {
 				outer: 'mb-5',
 				input: 'btn btn-outline w-full',

@@ -26,7 +26,6 @@ async function onClickDelete(course: Course) {
 						<th>Field</th>
 						<th>Semester</th>
 						<th>Room</th>
-						<th>Description</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -38,7 +37,6 @@ async function onClickDelete(course: Course) {
 						<th>{{ course.field.name }}</th>
 						<th>{{ course.season }} {{ course.year }}</th>
 						<th>{{ course.room.number }}</th>
-						<th>{{ course.description }}</th>
 						<th
 							v-if="$can('delete', subject('Course', course))"
 							@click="() => onClickDelete(course)"

@@ -21,6 +21,10 @@ export const courseRouter = router({
 					},
 				},
 			},
+			include: {
+				field: true,
+				room: true,
+			},
 		})
 
 		return courses
@@ -30,6 +34,11 @@ export const courseRouter = router({
 			where: {
 				roomId_fieldId_year_season: input,
 			},
+			include: {
+				teaching: true,
+				field: true,
+				room: true,
+			}
 		})
 
 		if (!course) {

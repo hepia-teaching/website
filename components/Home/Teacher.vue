@@ -7,18 +7,22 @@ const { data: courses } = await useAsyncData('my-courses', () =>
 </script>
 
 <template>
-	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
-		<FancyTitle>Actions</FancyTitle>
+	<div class="flex flex-col gap-3">
+		<div class="divider">My Courses</div>
 		<div
 			v-if="courses && courses.length > 0"
 			class="grid grid-cols-2"
 		>
-			<div
+			<NuxtLink
 				v-for="(course, key) in courses"
 				:key="key"
+				:to="`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
+				class="card bg-base-100 shadow-xl"
 			>
-				{{ JSON.stringify(course, null, 2) }}
-			</div>
+				<div class="card-body">
+					<h2 class="card-title">{{ course.field.name }}</h2>
+				</div>
+			</NuxtLink>
 		</div>
 		<div
 			v-else

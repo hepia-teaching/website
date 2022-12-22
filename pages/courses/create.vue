@@ -63,6 +63,12 @@ async function submit(values: z.infer<typeof createSchema>) {
 				type="select"
 				:options="semestersOptions"
 			/>
+
+            <ZodKit
+				label="Description"
+				name="description"
+				type="textarea"
+			/>
 		</ZodForm>
 	</div>
 </template>

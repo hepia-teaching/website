@@ -4,7 +4,7 @@ const store = useAuthStore()
 
 <template>
 	<Suspense>
-		<template #loading>Loading...</template>
+		<template #fallback>Loading...</template>
 		<template v-if="store.user">
 			<LazyHomeAdmin v-if="store.user.role === 'Admin'" />
 			<LazyHomeTeacher v-else-if="store.user.role === 'Teacher'" />
