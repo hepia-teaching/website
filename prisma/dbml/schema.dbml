@@ -69,6 +69,7 @@ Table Learning {
 }
 
 Table Assignements {
+  id Int [increment, not null]
   course Course [not null]
   roomId Int [not null]
   fieldId Int [not null]
@@ -80,7 +81,7 @@ Table Assignements {
   estimated_time Int [not null]
 
   indexes {
-    (roomId, fieldId, year, season) [pk]
+    (id, roomId, fieldId, year, season) [pk]
   }
 }
 

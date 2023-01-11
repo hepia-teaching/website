@@ -35,7 +35,7 @@ CREATE TABLE "Course" (
     "fieldId" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
     "season" "Season" NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("roomId","fieldId","year","season")
 );
@@ -64,6 +64,7 @@ CREATE TABLE "Learning" (
 
 -- CreateTable
 CREATE TABLE "Assignements" (
+    "id" SERIAL NOT NULL,
     "roomId" INTEGER NOT NULL,
     "fieldId" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
@@ -73,7 +74,7 @@ CREATE TABLE "Assignements" (
     "description" TEXT NOT NULL,
     "estimated_time" INTEGER NOT NULL,
 
-    CONSTRAINT "Assignements_pkey" PRIMARY KEY ("roomId","fieldId","year","season")
+    CONSTRAINT "Assignements_pkey" PRIMARY KEY ("id","roomId","fieldId","year","season")
 );
 
 -- CreateTable

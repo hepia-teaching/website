@@ -38,7 +38,8 @@ export const courseRouter = router({
 				teaching: true,
 				field: true,
 				room: true,
-			}
+				assignements: true,
+			},
 		})
 
 		if (!course) {

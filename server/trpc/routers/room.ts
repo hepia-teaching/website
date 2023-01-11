@@ -1,5 +1,7 @@
 import { protectedProcedure, router } from '../trpc'
-import { createSchema } from '@/zod/room'
+import { createSchema, deleteSchema } from '@/zod/room'
+import { TRPCError } from '@trpc/server'
+import { subject } from '@casl/ability'
 
 export const roomRouter = router({
 	list: protectedProcedure.query(({ ctx }) => {
@@ -10,4 +12,31 @@ export const roomRouter = router({
 			data: input,
 		})
 	}),
+	delete: protectedProcedure
+		.input(deleteSchema)
+		.mutation(async ({ input, ctx }) => {
+			const room = await ctx.prisma.room.findUnique({
+				where: {
+					id: input.id,
+				},
+			})
+
+			if (!room) {
+				throw new TRPCError({
+					code: 'NOT_FOUND',
+				})
+			}
+
+			if (ctx.ability.cannot('delete', subject('Room', room))) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
+			await ctx.prisma.room.delete({
+				where: {
+					id: input.id,
+				},
+			})
+		}),
 })

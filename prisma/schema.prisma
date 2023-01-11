@@ -81,6 +81,7 @@ model Learning {
 }
 
 model Assignements {
+  id             Int       @default(autoincrement())
   course         Course    @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
   roomId         Int
   fieldId        Int
@@ -91,7 +92,7 @@ model Assignements {
   description    String
   estimated_time Int
 
-  @@id([roomId, fieldId, year, season])
+  @@id([id, roomId, fieldId, year, season])
 }
 
 model Semester {

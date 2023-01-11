@@ -7,13 +7,14 @@ const actions = [
 	{ to: `/users/create?role=${Role.Student}`, text: 'Add a student' },
 	{ to: '/teaching/create', text: 'Assign a course' },
 	{ to: `/users/create?role=${Role.Student}`, text: 'Add a semester' },
-	{ to: `/fields/create?role=${Role.Student}`, text: 'Add a field' },
+	{ to: `/fields/create`, text: 'Add a field' },
+	{ to: `/rooms/create`, text: 'Add a room' },
 ]
 
 const listings = [
 	{ to: `/users?role=${Role.Teacher}`, text: 'Teachers' },
 	{ to: `/users?role=${Role.Student}`, text: 'Students' },
-	{ to: `/users`, text: 'Rooms' },
+	{ to: `/rooms`, text: 'Rooms' },
 	{ to: '/courses', text: 'Courses' },
 	{ to: `/users?role=${Role.Student}`, text: 'Semesters' },
 	{ to: '/fields', text: 'Fields' },

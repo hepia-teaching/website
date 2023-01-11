@@ -23,7 +23,7 @@ async function submit(values: z.infer<typeof loginSchema>) {
 </script>
 
 <template>
-	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
+	<div class="mx-auto mt-5 flex h-full flex-col gap-3">
 		<FancyTitle>Login</FancyTitle>
 		<ZodForm @submit="submit">
 			<ZodKit
