@@ -15,12 +15,11 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  email        String         @unique
-  role         Role
-  Teaching     Teaching[]
-  Learning     Learning[]
-  Assignements Assignements[]
+  id       Int        @id @default(autoincrement())
+  email    String     @unique
+  role     Role
+  teaching Teaching[]
+  learning Learning[]
 }
 
 enum Role {
@@ -49,10 +48,10 @@ model Course {
   semester     Semester       @relation(fields: [year, season], references: [year, season])
   year         Int
   season       Season
-  description  String
-  Teaching     Teaching[]
-  Learning     Learning[]
-  Assignements Assignements[]
+  description  String?
+  teaching     Teaching[]
+  learning     Learning[]
+  assignements Assignements[]
 
   @@id([roomId, fieldId, year, season])
 }
@@ -82,8 +81,7 @@ model Learning {
 }
 
 model Assignements {
-  student        User      @relation(fields: [studentId], references: [id])
-  studentId      Int
+  id             Int       @default(autoincrement())
   course         Course    @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
   roomId         Int
   fieldId        Int
@@ -94,7 +92,7 @@ model Assignements {
   description    String
   estimated_time Int
 
-  @@id([studentId, roomId, fieldId, year, season])
+  @@id([id, roomId, fieldId, year, season])
 }
 
 model Semester {

@@ -6,9 +6,8 @@ Table User {
   id Int [pk, increment]
   email String [unique, not null]
   role Role [not null]
-  Teaching Teaching [not null]
-  Learning Learning [not null]
-  Assignements Assignements [not null]
+  teaching Teaching [not null]
+  learning Learning [not null]
 }
 
 Table Field {
@@ -31,10 +30,10 @@ Table Course {
   semester Semester [not null]
   year Int [not null]
   season Season [not null]
-  description String [not null]
-  Teaching Teaching [not null]
-  Learning Learning [not null]
-  Assignements Assignements [not null]
+  description String
+  teaching Teaching [not null]
+  learning Learning [not null]
+  assignements Assignements [not null]
 
   indexes {
     (roomId, fieldId, year, season) [pk]
@@ -70,8 +69,7 @@ Table Learning {
 }
 
 Table Assignements {
-  student User [not null]
-  studentId Int [not null]
+  id Int [increment, not null]
   course Course [not null]
   roomId Int [not null]
   fieldId Int [not null]
@@ -83,7 +81,7 @@ Table Assignements {
   estimated_time Int [not null]
 
   indexes {
-    (studentId, roomId, fieldId, year, season) [pk]
+    (id, roomId, fieldId, year, season) [pk]
   }
 }
 
@@ -122,7 +120,5 @@ Ref: Teaching.(roomId, fieldId, year, season) > Course.(roomId, fieldId, year, s
 Ref: Learning.studentId > User.id
 
 Ref: Learning.(roomId, fieldId, year, season) > Course.(roomId, fieldId, year, season)
-
-Ref: Assignements.studentId > User.id
 
 Ref: Assignements.(roomId, fieldId, year, season) > Course.(roomId, fieldId, year, season)

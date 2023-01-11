@@ -8,6 +8,8 @@ import {
 import { z } from 'zod'
 import { FormKit } from '@formkit/vue'
 import { FormKitNode } from '@formkit/core'
+import { reset as formkitReset } from '@formkit/core'
+import { v4 as uuidv4 } from 'uuid'
 
 export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 	schema,
@@ -17,8 +19,14 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 	initialValues?: Partial<z.infer<T>>
 }) {
 	type FormKitProps = InstanceType<typeof FormKit>['$props']
-	type FormKitEmits = InstanceType<typeof FormKit>['$emit']
+	// type FormKitEmits = InstanceType<typeof FormKit>['$emit']
 	type ZodFormProps = Omit<FormKitProps, 'type'>
+
+	const uuid = uuidv4()
+
+	function reset() {
+		formkitReset(uuid)
+	}
 
 	const ZodForm = defineComponent<
 		ZodFormProps,
@@ -44,12 +52,13 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 					FormKit,
 					{
 						type: 'form',
+						id: uuid,
 						onSubmit: props.onSubmit,
-						onSubmitRaw: (_, node) => {
+						onSubmitRaw: (e, node) => {
 							const result = schema.safeParse(node?.value)
 
 							if (result.success) {
-								emit('submit', result.data, node)
+								props.onSubmit?.(result.data, node)
 							} else {
 								// emit('submit-invalid', node)
 							}
@@ -100,6 +109,7 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 					{
 						type: props.type,
 						name: props.name,
+						label: props.label,
 						validation: '+zod',
 						validationRules: { zod },
 						validationMessages: {
@@ -112,7 +122,7 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 		},
 	})
 
-	return { ZodForm, ZodKit } as {
+	return { ZodForm, ZodKit, reset } as {
 		ZodForm: typeof ZodForm & {
 			new (): {
 				$slots: {
@@ -123,5 +133,6 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 			}
 		}
 		ZodKit: typeof ZodKit
+		reset: () => void
 	}
 }

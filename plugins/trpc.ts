@@ -1,11 +1,22 @@
-import { httpBatchLink, createTRPCProxyClient } from '@trpc/client'
+import { httpBatchLink, createTRPCProxyClient, loggerLink } from '@trpc/client'
 import type { AppRouter } from '@/server/trpc/routers'
 
 export default defineNuxtPlugin(() => {
+	const headers = useRequestHeaders()
+
 	const client = createTRPCProxyClient<AppRouter>({
 		links: [
+			loggerLink({
+				enabled: (opts) =>
+					process.env.NODE_ENV === 'development' ||
+					(opts.direction === 'down' && opts.result instanceof Error),
+			}),
 			httpBatchLink({
 				url: '/api/trpc',
+
+				headers() {
+					return headers
+				},
 
 				/**
 				 * Replace regular `fetch` with a `$fetch` from nuxt
@@ -18,7 +29,10 @@ export default defineNuxtPlugin(() => {
 				 */
 				fetch: (input, options) =>
 					globalThis.$fetch
-						.raw(input.toString(), options)
+						.raw(input.toString(), {
+							...options,
+							credentials: 'include',
+						})
 						// .catch((e) => {
 						//   //   if (e instanceof RTCError && e.) return e.response;
 						//   throw e;

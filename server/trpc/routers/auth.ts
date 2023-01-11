@@ -2,11 +2,14 @@ import { protectedProcedure, publicProcedure, router } from '../trpc'
 import { loginSchema } from '@/zod/auth'
 import { TRPCError } from '@trpc/server'
 import * as jose from 'jose'
-import { users } from './user'
 
 export const authRouter = router({
-	me: protectedProcedure.query(({ ctx }) => {
-		const me = users.find((user) => user.email === ctx.user.email)
+	me: protectedProcedure.query(async ({ ctx }) => {
+		const me = await ctx.prisma.user.findUnique({
+			where: {
+				email: ctx.user.email,
+			},
+		})
 
 		if (!me) {
 			throw new TRPCError({
@@ -17,7 +20,11 @@ export const authRouter = router({
 		return me
 	}),
 	login: publicProcedure.input(loginSchema).mutation(async ({ input, ctx }) => {
-		const user = users.find((user) => user.email === input.email)
+		const user = await ctx.prisma.user.findUnique({
+			where: {
+				email: input.email,
+			},
+		})
 
 		if (!user) {
 			throw new TRPCError({

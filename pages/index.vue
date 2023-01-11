@@ -1,5 +1,12 @@
+<script setup lang="ts">
+const store = useAuthStore()
+</script>
+
 <template>
-	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
-		<FancyTitle data-testid="homepage-title">Welcome to Hepia</FancyTitle>
-	</div>
+	<template v-if="store.user">
+		<HomeAdmin v-if="store.user.role === 'Admin'" />
+		<HomeTeacher v-else-if="store.user.role === 'Teacher'" />
+		<div v-else>Welcome, {{ store.user.role }}</div>
+	</template>
+	<HomeAnon v-else />
 </template>

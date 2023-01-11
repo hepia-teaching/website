@@ -2,46 +2,50 @@
 const store = useAuthStore()
 
 const items = computed(() => {
-	let items = [{ to: '/', text: 'Home' }]
-
-	if (store.loggedIn) {
-		items = [
-			...items,
+	if (!store.loggedIn) {
+		return [
 			{
-				to: '/me',
-				text: 'Me',
-			},
-			{
-				to: '/logout',
-				text: 'Logout',
-			},
-		]
-	} else {
-		items = [
-			...items,
-			{
-				to: '/login',
+				to: '/',
 				text: 'Login',
 			},
 			{
-				to: '/signup',
+				to: '/users/create',
 				text: 'Signup',
 			},
 		]
 	}
 
-	return items
+	return [
+		{
+			to: '/',
+			text: 'Home',
+		},
+		{
+			to: '/me',
+			text: 'Me',
+		},
+		{
+			to: '/logout',
+			text: 'Logout',
+		},
+	]
 })
 </script>
 
 <template>
-	<div class="navbar bg-base-100">
-		<div class="flex-1">
+	<div class="navbar border-b bg-base-100">
+		<div class="flex flex-1 items-center gap-3">
 			<NuxtLink
 				to="/"
 				class="btn-ghost btn text-xl normal-case"
-				>daisyUI</NuxtLink
+				>Hepia</NuxtLink
 			>
+			<div
+				v-if="store.user"
+				class="badge-info badge-outline badge"
+			>
+				{{ store.user.role }}
+			</div>
 		</div>
 		<div class="flex-none">
 			<ul class="menu menu-horizontal px-1">
