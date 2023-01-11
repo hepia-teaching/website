@@ -7,14 +7,32 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 Make sure to install the dependencies:
 
 ```bash
-# yarn
-yarn install
-
 # npm
 npm install
+```
 
-# pnpm
-pnpm install --shamefully-hoist
+Copy `.env.example` to `.env`
+
+```bash
+cp .env.example .env
+```
+
+Start the database
+
+```
+docker compose up -d
+```
+
+Create your database
+
+```
+npx prisma db push
+```
+
+Run all the migrations
+
+```
+npx prisma migrate reset
 ```
 
 ## Development Server
