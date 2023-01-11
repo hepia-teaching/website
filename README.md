@@ -59,4 +59,24 @@ npm run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
-# website
+# Testing
+
+Run playwright tests
+
+```
+npm run test
+```
+
+Or call the playwright cli directly to have more options
+
+```
+npx playwright --help
+```
+
+# Linting
+
+Fix formatting
+
+```
+npm run fix
+```
