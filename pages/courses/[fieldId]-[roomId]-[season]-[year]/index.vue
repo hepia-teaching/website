@@ -31,7 +31,10 @@ const props = defineProps<{
 			</li>
 		</ul>
 		<aside>
-			<button class="btn btn-primary">Add assignement</button>
+			
+			<NuxtLink to="/assignements/create" class="btn btn-primary">
+				Add assignement
+			</NuxtLink>
 		</aside>
 	</div>
 </template>
