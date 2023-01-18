@@ -10,7 +10,7 @@ export const assignmentRouter = router({
 			data: {
 				endDate: input.endDate,
 				startDate: input.startDate,
-				estimated_time : input.estimate_time,
+				estimated_time: input.estimate_time,
 				description: input.description,
 				roomId: input.course.roomId,
 				fieldId: input.course.fieldId,
@@ -19,5 +19,4 @@ export const assignmentRouter = router({
 			},
 		})
 	}),
-
 })

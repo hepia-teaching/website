@@ -10,7 +10,7 @@ const actions = [
 	{ to: `/fields/create`, text: 'Add a field' },
 	{ to: `/rooms/create`, text: 'Add a room' },
 ]
- 
+
 const listings = [
 	{ to: `/users?role=${Role.Teacher}`, text: 'Teachers' },
 	{ to: `/users?role=${Role.Student}`, text: 'Students' },

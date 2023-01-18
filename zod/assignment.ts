@@ -8,13 +8,12 @@ const fieldId = z.number()
 const description = z.string()
 
 export const createSchema = z.object({
-    course:createCourseSchema,
-    startDate:z.coerce.date(),
-    endDate:z.coerce.date(),
+	course: createCourseSchema,
+	startDate: z.coerce.date(),
+	endDate: z.coerce.date(),
 	description,
-    estimate_time:z.coerce.number().min(0),
+	estimate_time: z.coerce.number().min(0),
 })
-
 
 export const getSchema = z.object({
 	roomId,

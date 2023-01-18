@@ -6,16 +6,14 @@ import { Season } from '@prisma/client'
 const { $trpc } = useNuxtApp()
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
-	schema: createSchema
+	schema: createSchema,
 })
 
 const router = useRouter()
 
-
-const [{ data: courses }] =
-	await Promise.all([		
-		useAsyncData(() => $trpc.course.list.query())
-	])
+const [{ data: courses }] = await Promise.all([
+	useAsyncData(() => $trpc.course.list.query()),
+])
 
 const coursesOptions = courses.value?.map((course) => ({
 	label: course.description || `${course.field.name}`,
@@ -24,22 +22,21 @@ const coursesOptions = courses.value?.map((course) => ({
 		fieldId: course.fieldId,
 		semester: {
 			year: course.year,
-			season: course.season
-		}
+			season: course.season,
+		},
 	},
 }))
 
 async function submit(values: z.infer<typeof createSchema>) {
 	await $trpc.assignements.create.mutate(values)
 	reset()
-	router.push(`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`)
+	router.push(
+		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
+	)
 }
-
-
 </script>
 
 <template>
-	
 	<div class="flex flex-col gap-3">
 		<FancyTitle>Create a new Assignment</FancyTitle>
 		<ZodForm @submit="submit">
@@ -65,7 +62,7 @@ async function submit(values: z.infer<typeof createSchema>) {
 				type="number"
 			/>
 
-			<ZodKit 
+			<ZodKit
 				label="Description"
 				name="description"
 				type="textarea"
