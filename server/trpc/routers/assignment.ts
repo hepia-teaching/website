@@ -1,8 +1,7 @@
 import { protectedProcedure, router } from '../trpc'
-import { createSchema } from '@/zod/assignment'
+import { createSchema, updateSchema, getSchema } from '@/zod/assignment'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
-import { string } from 'zod'
 
 export const assignmentRouter = router({
 	create: protectedProcedure.input(createSchema).mutation(({ input, ctx }) => {
@@ -18,5 +17,58 @@ export const assignmentRouter = router({
 				year: input.course.semester.year,
 			},
 		})
+	}),
+	update: protectedProcedure.input(updateSchema).mutation(({ input, ctx }) => {
+		return ctx.prisma.assignements.update({
+			where: {
+				id_roomId_fieldId_year_season: {
+					id: input.id,
+					roomId: input.course.roomId,
+					fieldId: input.course.fieldId,
+					season: input.course.semester.season,
+					year: input.course.semester.year,
+				},
+			},
+			data: {
+				endDate: input.endDate,
+				startDate: input.startDate,
+				estimated_time: input.estimate_time,
+				description: input.description,
+				roomId: input.course.roomId,
+				fieldId: input.course.fieldId,
+				season: input.course.semester.season,
+				year: input.course.semester.year,
+			},
+		})
+	}),
+	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
+		const assignement = await ctx.prisma.assignements.findUnique({
+			where: {
+				id_roomId_fieldId_year_season: input,
+			},
+			include: {
+				course: true,
+			},
+		})
+
+		if (!assignement) {
+			throw new TRPCError({
+				code: 'NOT_FOUND',
+			})
+		}
+
+		if (ctx.ability.cannot('read', subject('Assignement', assignement))) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
+		if (ctx.ability.cannot('update', subject('Assignement', assignement))) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
+		return assignement
 	}),
 })
