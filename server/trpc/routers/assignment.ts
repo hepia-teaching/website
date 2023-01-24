@@ -51,7 +51,7 @@ export const assignmentRouter = router({
 			},
 		})
 
-		if (!assignement) {§
+		if (!assignement) {
 			throw new TRPCError({
 				code: 'NOT_FOUND',
 			})
