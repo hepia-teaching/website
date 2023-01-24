@@ -51,7 +51,7 @@ export const assignmentRouter = router({
 			},
 		})
 
-		if (!assignement) {
+		if (!assignement) {§
 			throw new TRPCError({
 				code: 'NOT_FOUND',
 			})
@@ -64,6 +64,12 @@ export const assignmentRouter = router({
 		}
 
 		if (ctx.ability.cannot('update', subject('Assignement', assignement))) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
+		if (ctx.ability.cannot('create', subject('Assignement', assignement))) {
 			throw new TRPCError({
 				code: 'FORBIDDEN',
 			})
