@@ -25,7 +25,12 @@ const props = defineProps<{
 					>
 				</div>
 				<div class="btn-group">
-					<button class="btn-outline btn btn-sm">Edit</button>
+					<NuxtLink
+						:to="`/assignements/edit/${assignement.id}-${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
+						class="btn-outline btn btn-sm"
+					>
+						Edit
+					</NuxtLink>
 					<button class="btn-outline btn btn-error btn-sm">Delete</button>
 				</div>
 			</li>
