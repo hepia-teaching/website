@@ -5,6 +5,12 @@ import { subject } from '@casl/ability'
 
 export const assignmentRouter = router({
 	create: protectedProcedure.input(createSchema).mutation(({ input, ctx }) => {
+		if (ctx.ability.cannot('create', 'Assignement')) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
 		return ctx.prisma.assignements.create({
 			data: {
 				endDate: input.endDate,
@@ -19,6 +25,12 @@ export const assignmentRouter = router({
 		})
 	}),
 	update: protectedProcedure.input(updateSchema).mutation(({ input, ctx }) => {
+		if (ctx.ability.cannot('update', 'Assignement')) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
 		return ctx.prisma.assignements.update({
 			where: {
 				id_roomId_fieldId_year_season: {
@@ -58,18 +70,6 @@ export const assignmentRouter = router({
 		}
 
 		if (ctx.ability.cannot('read', subject('Assignement', assignement))) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-			})
-		}
-
-		if (ctx.ability.cannot('update', subject('Assignement', assignement))) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-			})
-		}
-
-		if (ctx.ability.cannot('create', subject('Assignement', assignement))) {
 			throw new TRPCError({
 				code: 'FORBIDDEN',
 			})
