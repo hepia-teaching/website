@@ -9,6 +9,11 @@ export default createConfig({
 				input: 'input input-bordered w-full formkit-invalid:input-error',
 				label: 'formkit-invalid:text-error',
 			},
+			date: {
+				outer: 'mb-5',
+				input: 'input input-bordered w-full formkit-invalid:input-error',
+				label: 'formkit-invalid:text-error',
+			},
 			select: {
 				outer: 'mb-5',
 				input: 'select select-bordered w-full',
