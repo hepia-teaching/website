@@ -9,6 +9,14 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: postgres
+        environment:
+          POSTGRES_PASSWORD: example
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v3
 

@@ -43,6 +43,7 @@ const items = computed(() => {
 			<div
 				v-if="store.user"
 				class="badge-info badge-outline badge"
+				data-testid="navbar-role"
 			>
 				{{ store.user.role }}
 			</div>

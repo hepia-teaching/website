@@ -27,6 +27,7 @@ async function submit(values: z.infer<typeof loginSchema>) {
 		<FancyTitle>Login</FancyTitle>
 		<ZodForm @submit="submit">
 			<ZodKit
+				data-testid="login-email"
 				type="text"
 				name="email"
 			/>
