@@ -28,7 +28,7 @@ const coursesOptions = courses.value?.map((course) => ({
 }))
 
 async function submit(values: z.infer<typeof createSchema>) {
-	await $trpc.assignements.create.mutate(values)
+	await $trpc.assignment.create.mutate(values)
 	reset()
 	router.push(
 		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`

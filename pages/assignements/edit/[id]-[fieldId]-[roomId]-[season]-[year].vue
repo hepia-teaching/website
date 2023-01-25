@@ -4,7 +4,7 @@ import { updateSchema, getRouteParamsSchema } from '@/zod/assignment'
 
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
-const assignement = await $trpc.assignements.get.query(params)
+const assignement = await $trpc.assignment.get.query(params)
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: updateSchema,
@@ -33,7 +33,7 @@ const coursesOptions = courses.value
 	})
 
 async function submit(values: z.infer<typeof updateSchema>) {
-	await $trpc.assignements.update.mutate(values)
+	await $trpc.assignment.update.mutate(values)
 	reset()
 	router.push(
 		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`

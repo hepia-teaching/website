@@ -4,6 +4,27 @@ import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
 export const assignmentRouter = router({
+	myAssignments: protectedProcedure.query(async ({ ctx }) => {
+		const assignments = await ctx.prisma.assignements.findMany({
+			where: {
+				course: {
+					learning: {
+						some: {
+							studentId: ctx.user.id,
+						},
+					},
+				},
+				endDate: {
+					gte: new Date(),
+				},
+			},
+			include: {
+				course: true,
+			},
+		})
+
+		return assignments
+	}),
 	create: protectedProcedure.input(createSchema).mutation(({ input, ctx }) => {
 		if (ctx.ability.cannot('create', 'Assignement')) {
 			throw new TRPCError({

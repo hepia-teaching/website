@@ -1,5 +1,4 @@
 <template>
-	<Navbar />
 	<main class="container mx-auto grid grid-cols-12 py-3">
 		<div
 			id="aside-left"
