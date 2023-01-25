@@ -16,19 +16,21 @@ const [{ data: courses }] = await Promise.all([
 	useAsyncData(() => $trpc.course.list.query()),
 ])
 
-const coursesOptions = courses.value?.map((course) => ({
-	label: course.description || `${course.field.name}`,
-	value: {
-		roomId: course.roomId,
-		fieldId: course.fieldId,
-		semester: {
-			year: course.year,
-			season: course.season,
+const coursesOptions = courses.value
+	?.map((course) => ({
+		label: course.description || `${course.field.name}`,
+		value: {
+			roomId: course.roomId,
+			fieldId: course.fieldId,
+			semester: {
+				year: course.year,
+				season: course.season,
+			},
 		},
-	},
-})).filter((course) => {
-	return course.value.fieldId == assignement.course.fieldId
-})
+	}))
+	.filter((course) => {
+		return course.value.fieldId == assignement.course.fieldId
+	})
 
 async function submit(values: z.infer<typeof updateSchema>) {
 	await $trpc.assignements.update.mutate(values)
