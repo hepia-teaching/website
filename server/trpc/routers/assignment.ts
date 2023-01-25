@@ -10,16 +10,16 @@ export const assignmentRouter = router({
 				course: {
 					learning: {
 						some: {
-							studentId: ctx.user.id
-						}
-					}
+							studentId: ctx.user.id,
+						},
+					},
 				},
 				endDate: {
-					gte: new Date()
-				}
+					gte: new Date(),
+				},
 			},
 			include: {
-				course: true
+				course: true,
 			},
 		})
 

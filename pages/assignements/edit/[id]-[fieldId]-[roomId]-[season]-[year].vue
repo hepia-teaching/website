@@ -45,17 +45,47 @@ async function submit(values: z.infer<typeof updateSchema>) {
 	<div class="flex flex-col gap-3">
 		<FancyTitle>Edit an Assignment</FancyTitle>
 		<ZodForm @submit="submit">
-			<ZodKit label="ID" type="hidden" name="id" :value="assignement.id" />
-			<ZodKit label="Course" type="select" name="course" disabled="true" :options="coursesOptions"
-				:selected="assignement.course" />
-			<ZodKit label="Start Date" name="startDate" type="date"
-				:value="new Date(assignement.startDate).toISOString().substring(0, 10)" />
-			<ZodKit label="End Date" name="endDate" type="date" :value="
-				new Date(assignement.endDate || 0).toISOString().substring(0, 10)
-			" />
-			<ZodKit label="Estimated Time" name="estimate_time" type="number" :value="assignement.estimated_time" />
+			<ZodKit
+				label="ID"
+				type="hidden"
+				name="id"
+				:value="assignement.id"
+			/>
+			<ZodKit
+				label="Course"
+				type="select"
+				name="course"
+				disabled="true"
+				:options="coursesOptions"
+				:selected="assignement.course"
+			/>
+			<ZodKit
+				label="Start Date"
+				name="startDate"
+				type="date"
+				:value="new Date(assignement.startDate).toISOString().substring(0, 10)"
+			/>
+			<ZodKit
+				label="End Date"
+				name="endDate"
+				type="date"
+				:value="
+					new Date(assignement.endDate || 0).toISOString().substring(0, 10)
+				"
+			/>
+			<ZodKit
+				label="Estimated Time"
+				name="estimate_time"
+				type="number"
+				:value="assignement.estimated_time"
+			/>
 
-			<ZodKit label="Description" name="description" type="textarea" :value="assignement.description" />
+			<ZodKit
+				label="Description"
+				name="description"
+				type="textarea"
+				:value="assignement.description"
+			/>
 		</ZodForm>
 	</div>
 </template>

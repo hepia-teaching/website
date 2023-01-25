@@ -4,7 +4,6 @@ const store = useAuthStore()
 definePageMeta({
 	layout: false,
 })
-
 </script>
 
 <template>
