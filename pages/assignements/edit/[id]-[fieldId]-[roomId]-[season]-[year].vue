@@ -26,7 +26,9 @@ const coursesOptions = courses.value?.map((course) => ({
 			season: course.season,
 		},
 	},
-}))
+})).filter((course) => {
+	return course.value.fieldId == assignement.course.fieldId
+})
 
 async function submit(values: z.infer<typeof updateSchema>) {
 	await $trpc.assignements.update.mutate(values)
