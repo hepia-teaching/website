@@ -52,11 +52,11 @@ test(`Create assignement as teacher`, async ({ page }) => {
 	)
 
 	// testing form inputs
-	await page.getByLabel('Course').selectOption({ label: 'Maths' })
-	await page.getByLabel('Start Date').fill('2023-02-02')
-	await page.getByLabel('End Date').fill('2023-02-12')
-	await page.getByLabel('Estimated Time').fill('42')
-	await page.getByLabel('Description').fill('New Assignments')
+	await page.getByTestId('course').selectOption({ label: 'Maths' })
+	await page.getByTestId('start-date').fill('2023-02-02')
+	await page.getByTestId('end-date').fill('2023-02-12')
+	await page.getByTestId('estimated-time').fill('42')
+	await page.getByTestId('description').fill('New Assignments')
 
 	await page.getByText('submit').click()
 

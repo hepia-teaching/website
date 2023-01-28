@@ -45,27 +45,32 @@ async function submit(values: z.infer<typeof createSchema>) {
 				type="select"
 				name="course"
 				:options="coursesOptions"
+				data-testid="course"
 			/>
 			<ZodKit
 				label="Start Date"
 				name="startDate"
 				type="date"
+				data-testid="start-date"
 			/>
 			<ZodKit
 				label="End Date"
 				name="endDate"
 				type="date"
+				data-testid="end-date"
 			/>
 			<ZodKit
 				label="Estimated Time"
 				name="estimate_time"
 				type="number"
+				data-testid="estimated-time"
 			/>
 
 			<ZodKit
 				label="Description"
 				name="description"
 				type="textarea"
+				data-testid="description"
 			/>
 		</ZodForm>
 	</div>
