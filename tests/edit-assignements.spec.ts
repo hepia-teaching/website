@@ -139,7 +139,7 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 		'http://localhost:3000/api/trpc/assignment.update?batch=1'
 	)
 
-	await page.getByTestId('id')
+	await page.getByTestId('id').fill('1')
 	await page.getByTestId('course').selectOption({
 		index: 0,
 	})
