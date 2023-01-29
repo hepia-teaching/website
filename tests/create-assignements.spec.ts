@@ -44,7 +44,7 @@ const room: Pick<Room, 'number'> = {
 
 const semester: Semester = {
 	name: faker.lorem.word(),
-	year: 2023,
+	year: faker.datatype.number({ min: 0 }),
 	season: 'Automn',
 }
 
@@ -63,16 +63,27 @@ test.beforeAll(async () => {
 		data: room,
 	})
 
-	const createdSemester = await prisma.semester.create({
-		data: semester,
+	const exists = await prisma.semester.findUnique({
+		where: {
+			year_season: {
+				season: semester.season,
+				year: semester.year,
+			},
+		},
 	})
+
+	if (!exists) {
+		await prisma.semester.create({
+			data: semester,
+		})
+	}
 
 	const createdCourse = await prisma.course.create({
 		data: {
 			fieldId: createdField.id,
 			roomId: createdRoom.id,
-			season: createdSemester.season,
-			year: createdSemester.year,
+			season: semester.season,
+			year: semester.year,
 			description: courseDescription,
 		},
 	})
