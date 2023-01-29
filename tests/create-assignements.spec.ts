@@ -63,12 +63,16 @@ test.beforeAll(async () => {
 		data: room,
 	})
 
+	const createdSemester = await prisma.semester.create({
+		data: semester,
+	})
+
 	const createdCourse = await prisma.course.create({
 		data: {
 			fieldId: createdField.id,
 			roomId: createdRoom.id,
-			season: semester.season,
-			year: semester.year,
+			season: createdSemester.season,
+			year: createdSemester.year,
 			description: courseDescription,
 		},
 	})
