@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { PrismaClient, User, Field, Room } from '@prisma/client'
+import { PrismaClient, User, Field, Room, Semester } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import * as jose from 'jose'
 
@@ -42,6 +42,12 @@ const room: Pick<Room, 'number'> = {
 	number: faker.datatype.uuid(),
 }
 
+const semester: Semester = {
+	name: faker.lorem.word(),
+	year: 2023,
+	season: 'Automn',
+}
+
 const courseDescription = faker.datatype.uuid()
 
 const userCookies = new Map<User['email'], Cookie>()
@@ -61,8 +67,8 @@ test.beforeAll(async () => {
 		data: {
 			fieldId: createdField.id,
 			roomId: createdRoom.id,
-			season: 'Automn',
-			year: 2023,
+			season: semester.season,
+			year: semester.year,
 			description: courseDescription,
 		},
 	})
