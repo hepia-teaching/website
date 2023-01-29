@@ -117,13 +117,14 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 	await browserContext.addCookies([cookie])
 	const page = await browserContext.newPage()
 
-	await page.goto('http://localhost:3000/assignements/edit/1-1-1-Automn-2023')
+	//Create
+	await page.goto('http://localhost:3000/assignements/create')
 	await expect(page.getByTestId('homepage-title')).toHaveText(
-		'Edit an Assignement'
+		'Create a new Assignment'
 	)
 
-	const responsePromise = page.waitForResponse(
-		'http://localhost:3000/api/trpc/assignment.update?batch=1'
+	const responsePromiseCreate = page.waitForResponse(
+		'http://localhost:3000/api/trpc/assignment.create?batch=1'
 	)
 
 	await page.getByTestId('course').selectOption({
@@ -133,6 +134,32 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 	await page.getByTestId('start-date').fill('2023-02-02')
 	await page.getByTestId('end-date').fill('2023-02-12')
 	await page.getByTestId('estimated-time').fill('42')
+	await page.getByTestId('description').fill('New Assignments')
+	await page.getByText('submit').click()
+
+	const createResponseCreate = await responsePromiseCreate
+
+	expect(createResponseCreate.request().method()).toBe('POST')
+	expect(createResponseCreate.status()).toBe(200)
+
+	//Edit
+	await page.goto('http://localhost:3000/assignements/edit/1-1-1-Automn-2023')
+	await expect(page.getByTestId('homepage-title')).toHaveText(
+		'Edit an Assignement'
+	)
+
+	const responsePromise = page.waitForResponse(
+		'http://localhost:3000/api/trpc/assignment.update?batch=1'
+	)
+
+	await page.getByTestId('id')
+	await page.getByTestId('course').selectOption({
+		label: 'Maths',
+	})
+
+	await page.getByTestId('start-date').fill('2023-02-02')
+	await page.getByTestId('end-date').fill('2023-05-12')
+	await page.getByTestId('estimated-time').fill('45')
 	await page.getByTestId('description').fill('Edit Assignments')
 	await page.getByText('submit').click()
 

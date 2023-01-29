@@ -50,6 +50,7 @@ async function submit(values: z.infer<typeof updateSchema>) {
 				type="hidden"
 				name="id"
 				:value="assignement.id"
+				data-testid="id"
 			/>
 			<ZodKit
 				label="Course"
