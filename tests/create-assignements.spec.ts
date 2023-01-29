@@ -44,7 +44,7 @@ const room: Pick<Room, 'number'> = {
 
 const semester: Semester = {
 	name: faker.lorem.word(),
-	year: faker.datatype.number({ min: 0 }),
+	year: faker.datatype.number({ min: 2000, max: 3000 }),
 	season: 'Automn',
 }
 
