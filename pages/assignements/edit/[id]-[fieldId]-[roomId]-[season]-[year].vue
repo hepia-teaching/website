@@ -43,7 +43,7 @@ async function submit(values: z.infer<typeof updateSchema>) {
 
 <template>
 	<div class="flex flex-col gap-3">
-		<FancyTitle>Edit an Assignment</FancyTitle>
+		<FancyTitle>Edit an Assignement</FancyTitle>
 		<ZodForm @submit="submit">
 			<ZodKit
 				label="ID"
@@ -55,15 +55,16 @@ async function submit(values: z.infer<typeof updateSchema>) {
 				label="Course"
 				type="select"
 				name="course"
-				disabled="true"
 				:options="coursesOptions"
 				:selected="assignement.course"
+				data-testid="course"
 			/>
 			<ZodKit
 				label="Start Date"
 				name="startDate"
 				type="date"
 				:value="new Date(assignement.startDate).toISOString().substring(0, 10)"
+				data-testid="start-date"
 			/>
 			<ZodKit
 				label="End Date"
@@ -72,12 +73,14 @@ async function submit(values: z.infer<typeof updateSchema>) {
 				:value="
 					new Date(assignement.endDate || 0).toISOString().substring(0, 10)
 				"
+				data-testid="end-date"
 			/>
 			<ZodKit
 				label="Estimated Time"
 				name="estimate_time"
 				type="number"
 				:value="assignement.estimated_time"
+				data-testid="estimated-time"
 			/>
 
 			<ZodKit
@@ -85,6 +88,7 @@ async function submit(values: z.infer<typeof updateSchema>) {
 				name="description"
 				type="textarea"
 				:value="assignement.description"
+				data-testid="description"
 			/>
 		</ZodForm>
 	</div>
