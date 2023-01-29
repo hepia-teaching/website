@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { createSchema } from '@/zod/assignment'
-import { Season } from '@prisma/client'
-
 const { $trpc } = useNuxtApp()
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
@@ -10,12 +8,9 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 })
 
 const router = useRouter()
+const courses = await $trpc.course.list.query()
 
-const [{ data: courses }] = await Promise.all([
-	useAsyncData(() => $trpc.course.list.query()),
-])
-
-const coursesOptions = courses.value?.map((course) => ({
+const coursesOptions = courses.map((course) => ({
 	label: course.description || `${course.field.name}`,
 	value: {
 		roomId: course.roomId,
@@ -65,7 +60,6 @@ async function submit(values: z.infer<typeof createSchema>) {
 				type="number"
 				data-testid="estimated-time"
 			/>
-
 			<ZodKit
 				label="Description"
 				name="description"

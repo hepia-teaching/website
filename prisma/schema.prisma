@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator dbml {
   provider = "prisma-dbml-generator"
 }
@@ -18,14 +15,8 @@ model User {
   id       Int        @id @default(autoincrement())
   email    String     @unique
   role     Role
-  teaching Teaching[]
   learning Learning[]
-}
-
-enum Role {
-  Admin
-  Teacher
-  Student
+  teaching Teaching[]
 }
 
 model Field {
@@ -41,48 +32,47 @@ model Room {
 }
 
 model Course {
-  room         Room           @relation(fields: [roomId], references: [id])
   roomId       Int
-  field        Field          @relation(fields: [fieldId], references: [id])
   fieldId      Int
-  semester     Semester       @relation(fields: [year, season], references: [year, season])
   year         Int
   season       Season
   description  String?
-  teaching     Teaching[]
-  learning     Learning[]
   assignements Assignements[]
+  field        Field          @relation(fields: [fieldId], references: [id])
+  room         Room           @relation(fields: [roomId], references: [id])
+  semester     Semester       @relation(fields: [year, season], references: [year, season])
+  learning     Learning[]
+  teaching     Teaching[]
 
   @@id([roomId, fieldId, year, season])
 }
 
 model Teaching {
-  teacher   User   @relation(fields: [teacherId], references: [id])
   teacherId Int
-  course    Course @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
   roomId    Int
   fieldId   Int
   year      Int
   season    Season
+  course    Course @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
+  teacher   User   @relation(fields: [teacherId], references: [id])
 
   @@id([teacherId, roomId, fieldId, year, season])
 }
 
 model Learning {
-  student   User   @relation(fields: [studentId], references: [id])
   studentId Int
-  course    Course @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
   roomId    Int
   fieldId   Int
   year      Int
   season    Season
+  course    Course @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
+  student   User   @relation(fields: [studentId], references: [id])
 
   @@id([studentId, roomId, fieldId, year, season])
 }
 
 model Assignements {
   id             Int       @default(autoincrement())
-  course         Course    @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
   roomId         Int
   fieldId        Int
   year           Int
@@ -91,6 +81,7 @@ model Assignements {
   endDate        DateTime?
   description    String
   estimated_time Int
+  course         Course    @relation(fields: [roomId, fieldId, year, season], references: [roomId, fieldId, year, season])
 
   @@id([id, roomId, fieldId, year, season])
 }
@@ -102,6 +93,12 @@ model Semester {
   courses Course[]
 
   @@id([year, season])
+}
+
+enum Role {
+  Admin
+  Teacher
+  Student
 }
 
 enum Season {

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-const store = useAuthStore()
+const { $trpc } = useNuxtApp()
+const { data: me, error } = useAsyncData(() => $trpc.auth.me.query())
 </script>
 
 <template>
-	<pre>{{ JSON.stringify(store.user, null, 2) }}</pre>
+	<div v-if="error">{{ error.message }}</div>
+	<pre v-else>{{ JSON.stringify(me, null, 2) }}</pre>
 </template>
