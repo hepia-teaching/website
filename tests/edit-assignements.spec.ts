@@ -102,6 +102,19 @@ test.beforeAll(async () => {
 		},
 	})
 
+	await prisma.assignements.create({
+		data: {
+			description: 'description',
+			estimated_time: 12,
+			startDate: new Date('2023-01-01'),
+			endDate: new Date('2023-01-02'),
+			fieldId: createdCourse.fieldId,
+			roomId: createdCourse.roomId,
+			season: createdCourse.season,
+			year: createdCourse.year,
+		},
+	})
+
 	const cookie = await getCookie(createdTeacher)
 	userCookies.set(createdTeacher.email, cookie)
 })
@@ -117,32 +130,6 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 	await browserContext.addCookies([cookie])
 	const page = await browserContext.newPage()
 
-	//Create
-	await page.goto('http://localhost:3000/assignements/create')
-	await expect(page.getByTestId('homepage-title')).toHaveText(
-		'Create a new Assignment'
-	)
-
-	const responsePromiseCreate = page.waitForResponse(
-		'http://localhost:3000/api/trpc/assignment.create?batch=1'
-	)
-
-	await page.getByTestId('course').selectOption({
-		label: 'Maths',
-	})
-
-	await page.getByTestId('start-date').fill('2023-02-02')
-	await page.getByTestId('end-date').fill('2023-02-12')
-	await page.getByTestId('estimated-time').fill('42')
-	await page.getByTestId('description').fill('New Assignments')
-	await page.getByText('submit').click()
-
-	const createResponseCreate = await responsePromiseCreate
-
-	expect(createResponseCreate.request().method()).toBe('POST')
-	expect(createResponseCreate.status()).toBe(200)
-
-	//Edit
 	await page.goto('http://localhost:3000/assignements/edit/1-1-1-Automn-2023')
 	await expect(page.getByTestId('homepage-title')).toHaveText(
 		'Edit an Assignement'
@@ -154,7 +141,7 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 
 	await page.getByTestId('id')
 	await page.getByTestId('course').selectOption({
-		label: 'Maths',
+		index: 0,
 	})
 
 	await page.getByTestId('start-date').fill('2023-02-02')
