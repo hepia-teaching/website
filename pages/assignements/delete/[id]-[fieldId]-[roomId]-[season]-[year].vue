@@ -16,7 +16,6 @@ const [{ data: courses }] = await Promise.all([
 	useAsyncData(() => $trpc.course.list.query()),
 ])
 
-
 const coursesOptions = courses.value?.map((course) => ({
 	label: course.description || `${course.field.name}`,
 	value: {
@@ -30,26 +29,25 @@ const coursesOptions = courses.value?.map((course) => ({
 }))
 
 async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
-	await $trpc.assignements.delete.mutate(values);
-    reset()
+	await $trpc.assignements.delete.mutate(values)
+	reset()
 	router.push(
-        `/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
-        )
+		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
+	)
 }
 
 // async function cancel() {
-	
+
 // 	router.push(
 //         `/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`
 //         );
 // }
-
 </script>
 
 <template>
-    <div class="flex flex-col gap-3">
-        <FancyTitle>Please confirm the deletion</FancyTitle>
-        <ZodForm @submit="submit"> 
+	<div class="flex flex-col gap-3">
+		<FancyTitle>Please confirm the deletion</FancyTitle>
+		<ZodForm @submit="submit">
 			<ZodKit
 				label="ID"
 				type="hidden"
@@ -68,21 +66,21 @@ async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
 				label="Start Date"
 				name="startDate"
 				type="date"
-                disabled="true"
+				disabled="true"
 				:value="assignement.startDate"
 			/>
 			<ZodKit
 				label="End Date"
 				name="endDate"
 				type="date"
-                disabled="true"
+				disabled="true"
 				:value="assignement.endDate"
 			/>
 			<ZodKit
 				label="Estimated Time"
 				name="estimate_time"
 				type="number"
-                disabled="true"
+				disabled="true"
 				:value="assignement.estimated_time"
 			/>
 
@@ -90,14 +88,15 @@ async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
 				label="Description"
 				name="description"
 				type="textarea"
-                disabled="true"
+				disabled="true"
 				:value="assignement.description"
-			/> 
-			<NuxtLink 
-						:to="`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
-						class="btn-outline btn btn-error btn-md ">
-						Cancel
+			/>
+			<NuxtLink
+				:to="`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
+				class="btn-outline btn-error btn-md btn"
+			>
+				Cancel
 			</NuxtLink>
-		</ZodForm> 
-    </div>
+		</ZodForm>
+	</div>
 </template>

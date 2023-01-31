@@ -1,5 +1,10 @@
 import { protectedProcedure, router } from '../trpc'
-import { createSchema, updateSchema, getSchema,deleteSchemaAssignement } from '@/zod/assignment'
+import {
+	createSchema,
+	updateSchema,
+	getSchema,
+	deleteSchemaAssignement,
+} from '@/zod/assignment'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
@@ -41,23 +46,25 @@ export const assignmentRouter = router({
 			},
 		})
 	}),
-	delete: protectedProcedure.input(deleteSchemaAssignement).mutation(async({ input, ctx }) => {
-		let res =  await ctx.prisma.assignements.delete({
-			where: {
-				id_roomId_fieldId_year_season: {
-					id: input.id,
-					roomId: input.course.roomId,
-					fieldId: input.course.fieldId,
-					season: input.course.semester.season,
-					year: input.course.semester.year,
+	delete: protectedProcedure
+		.input(deleteSchemaAssignement)
+		.mutation(async ({ input, ctx }) => {
+			let res = await ctx.prisma.assignements.delete({
+				where: {
+					id_roomId_fieldId_year_season: {
+						id: input.id,
+						roomId: input.course.roomId,
+						fieldId: input.course.fieldId,
+						season: input.course.semester.season,
+						year: input.course.semester.year,
+					},
 				},
-			},
-			include: {
-				course:true
-			},
-		})
-		return res;
-	}),
+				include: {
+					course: true,
+				},
+			})
+			return res
+		}),
 	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
 		const assignement = await ctx.prisma.assignements.findUnique({
 			where: {

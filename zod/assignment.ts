@@ -17,7 +17,7 @@ export const createSchema = z.object({
 })
 
 export const updateSchema = z.object({
-	id:z.number(),
+	id: z.number(),
 	course: createCourseSchema,
 	startDate: z.coerce.date(),
 	endDate: z.coerce.date(),
@@ -26,7 +26,7 @@ export const updateSchema = z.object({
 })
 
 export const deleteSchemaAssignement = z.object({
-	id:z.number(),
+	id: z.number(),
 	course: createCourseSchema,
 	startDate: z.coerce.date(),
 	endDate: z.coerce.date(),
