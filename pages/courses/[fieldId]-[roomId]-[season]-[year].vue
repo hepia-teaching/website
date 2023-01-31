@@ -6,7 +6,6 @@ const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
 const course = await $trpc.course.get.query(params)
 
-console.log(course)
 </script>
 
 <template>
