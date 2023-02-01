@@ -96,6 +96,18 @@ export const assignmentRouter = router({
 					course: true,
 				},
 			})
+
+			if (!res) {
+				throw new TRPCError({
+					code: 'NOT_FOUND',
+				})
+			}
+			if (ctx.ability.cannot('delete', subject('Assignement', res))) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
 			return res
 		}),
 	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
