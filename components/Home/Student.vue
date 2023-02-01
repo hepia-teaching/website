@@ -20,6 +20,7 @@ const total_hours = computed(() =>
 			<div
 				class="grid grid-cols-1 gap-3"
 				v-if="data && data.length > 0"
+				data-testid="assignments"
 			>
 				<NuxtLink
 					v-for="(assignment, key) in data"
