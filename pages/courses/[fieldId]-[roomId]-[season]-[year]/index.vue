@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { getRouteParamsSchema } from '@/zod/course'
+import { z } from 'zod'
+import { Assignements } from '@prisma/client'
+import { deleteSchemaAssignement } from '@/zod/assignment'
 import dayjs from 'dayjs'
+import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
+
+const router = useRouter()
+
+const { ZodForm, ZodKit, reset } = useZodFormKit({
+	schema: deleteSchemaAssignement,
+})
 
 const props = defineProps<{
 	course: Awaited<ReturnType<typeof $trpc.course.get.query>>
@@ -31,7 +40,13 @@ const props = defineProps<{
 					>
 						Edit
 					</NuxtLink>
-					<button class="btn-outline btn btn-error btn-sm">Delete</button>
+
+					<NuxtLink
+						:to="`/assignements/delete/${assignement.id}-${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
+						class="btn-outline btn btn-error btn-sm"
+					>
+						Delete
+					</NuxtLink>
 				</div>
 			</li>
 		</ul>

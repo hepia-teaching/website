@@ -6,6 +6,7 @@ node_modules
 .output
 .env
 dist
+/generated/
 /test-results/
 /playwright-report/
 /playwright/.cache/
