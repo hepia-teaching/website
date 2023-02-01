@@ -61,6 +61,12 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 # Testing
 
+Make sure to install the dependencies:
+
+```
+px playwright install
+```
+
 Run playwright tests
 
 ```
