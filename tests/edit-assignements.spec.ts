@@ -1,33 +1,8 @@
 import { test, expect } from '@playwright/test'
 import { PrismaClient, User, Field, Room, Semester } from '@prisma/client'
 import { faker } from '@faker-js/faker'
-import * as jose from 'jose'
-
-type Cookie = {
-	value: string
-	name: 'auth_token'
-	path: '/'
-	httpOnly: true
-	domain: 'localhost'
-}
-
-async function getCookie(user: User): Promise<Cookie> {
-	const secret = new TextEncoder().encode('secret')
-	const alg = 'HS256'
-
-	const token = await new jose.SignJWT(user)
-		.setProtectedHeader({ alg })
-		.setExpirationTime('2h')
-		.sign(secret)
-
-	return {
-		name: 'auth_token',
-		value: token,
-		path: '/',
-		httpOnly: true,
-		domain: 'localhost',
-	}
-}
+import { createCookie } from './utils/cookie'
+import dayjs from 'dayjs'
 
 const teacher: Pick<User, 'email' | 'role'> = {
 	email: faker.datatype.uuid() + '@hepia.com',
@@ -35,6 +10,10 @@ const teacher: Pick<User, 'email' | 'role'> = {
 }
 
 const field: Pick<Field, 'name'> = {
+	name: faker.datatype.uuid(),
+}
+
+const newField: Pick<Field, 'name'> = {
 	name: faker.datatype.uuid(),
 }
 
@@ -49,14 +28,17 @@ const semester: Semester = {
 }
 
 const courseDescription = faker.datatype.uuid()
+const newCourseDescription = faker.datatype.uuid()
 
-const userCookies = new Map<User['email'], Cookie>()
-
-test.beforeAll(async () => {
+test(`Edit an assignement as teacher`, async ({ browser }) => {
 	const prisma = new PrismaClient()
 
 	const createdField = await prisma.field.create({
 		data: field,
+	})
+
+	const createdNewField = await prisma.field.create({
+		data: newField,
 	})
 
 	const createdRoom = await prisma.room.create({
@@ -88,49 +70,59 @@ test.beforeAll(async () => {
 		},
 	})
 
+	await prisma.course.create({
+		data: {
+			fieldId: createdNewField.id,
+			roomId: createdRoom.id,
+			season: semester.season,
+			year: semester.year,
+			description: newCourseDescription,
+		},
+	})
+
 	const createdTeacher = await prisma.user.create({
 		data: teacher,
 	})
 
-	await prisma.teaching.create({
-		data: {
-			fieldId: createdCourse.fieldId,
-			roomId: createdCourse.roomId,
-			season: createdCourse.season,
-			year: createdCourse.year,
-			teacherId: createdTeacher.id,
-		},
+	await prisma.teaching.createMany({
+		data: [
+			{
+				fieldId: createdField.id,
+				roomId: createdRoom.id,
+				season: semester.season,
+				year: semester.year,
+				teacherId: createdTeacher.id,
+			},
+			{
+				fieldId: createdNewField.id,
+				roomId: createdRoom.id,
+				season: semester.season,
+				year: semester.year,
+				teacherId: createdTeacher.id,
+			},
+		],
 	})
 
-	await prisma.assignements.create({
-		data: {
-			description: 'description',
-			estimated_time: 12,
-			startDate: new Date('2023-01-01'),
-			endDate: new Date('2023-01-02'),
-			fieldId: createdCourse.fieldId,
-			roomId: createdCourse.roomId,
-			season: createdCourse.season,
-			year: createdCourse.year,
-		},
-	})
+	const { id, fieldId, roomId, season, year } =
+		await prisma.assignements.create({
+			data: {
+				fieldId: createdCourse.fieldId,
+				roomId: createdCourse.roomId,
+				season: createdCourse.season,
+				year: createdCourse.year,
+				description: faker.lorem.word(),
+				estimated_time: faker.datatype.number({ min: 1, max: 100 }),
+				startDate: dayjs().subtract(1, 'day').toDate(),
+			},
+		})
 
-	const cookie = await getCookie(createdTeacher)
-	userCookies.set(createdTeacher.email, cookie)
-})
-
-test(`Edit an assignement as teacher`, async ({ browser }) => {
-	const cookie = userCookies.get(teacher.email)
-
-	if (!cookie) {
-		throw new Error('no cookie found')
-	}
-
+	const cookie = await createCookie(createdTeacher)
 	const browserContext = await browser.newContext()
 	await browserContext.addCookies([cookie])
 	const page = await browserContext.newPage()
 
-	await page.goto('http://localhost:3000/assignements/edit/1-1-1-Automn-2023')
+	const path = [id, fieldId, roomId, season, year].join('-')
+	await page.goto(`http://localhost:3000/assignements/edit/${path}`)
 	await expect(page.getByTestId('homepage-title')).toHaveText(
 		'Edit an Assignement'
 	)
@@ -138,11 +130,6 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 	const responsePromise = page.waitForResponse(
 		'http://localhost:3000/api/trpc/assignment.update?batch=1'
 	)
-
-	await page.getByTestId('id').fill('1')
-	await page.getByTestId('course').selectOption({
-		index: 0,
-	})
 
 	await page.getByTestId('start-date').fill('2023-02-02')
 	await page.getByTestId('end-date').fill('2023-05-12')
