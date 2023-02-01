@@ -4,8 +4,8 @@ import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
 export const courseRouter = router({
-	list: protectedProcedure.query(({ ctx }) => {
-		return ctx.prisma.course.findMany({
+	list: protectedProcedure.query(async ({ ctx }) => {
+		return await ctx.prisma.course.findMany({
 			include: {
 				field: true,
 				room: true,

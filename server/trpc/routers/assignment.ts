@@ -9,7 +9,34 @@ import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
 export const assignmentRouter = router({
+	myAssignments: protectedProcedure.query(async ({ ctx }) => {
+		const assignments = await ctx.prisma.assignements.findMany({
+			where: {
+				course: {
+					learning: {
+						some: {
+							studentId: ctx.user.id,
+						},
+					},
+				},
+				endDate: {
+					gte: new Date(),
+				},
+			},
+			include: {
+				course: true,
+			},
+		})
+
+		return assignments
+	}),
 	create: protectedProcedure.input(createSchema).mutation(({ input, ctx }) => {
+		if (ctx.ability.cannot('create', 'Assignement')) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
 		return ctx.prisma.assignements.create({
 			data: {
 				endDate: input.endDate,
@@ -24,25 +51,31 @@ export const assignmentRouter = router({
 		})
 	}),
 	update: protectedProcedure.input(updateSchema).mutation(({ input, ctx }) => {
+		if (ctx.ability.cannot('update', 'Assignement')) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
 		return ctx.prisma.assignements.update({
 			where: {
 				id_roomId_fieldId_year_season: {
 					id: input.id,
-					roomId: input.course.roomId,
-					fieldId: input.course.fieldId,
-					season: input.course.semester.season,
-					year: input.course.semester.year,
+					roomId: input.roomId,
+					fieldId: input.fieldId,
+					season: input.season,
+					year: input.year,
 				},
 			},
 			data: {
 				endDate: input.endDate,
 				startDate: input.startDate,
-				estimated_time: input.estimate_time,
+				estimated_time: input.estimated_time,
 				description: input.description,
-				roomId: input.course.roomId,
-				fieldId: input.course.fieldId,
-				season: input.course.semester.season,
-				year: input.course.semester.year,
+				roomId: input.roomId,
+				fieldId: input.fieldId,
+				season: input.season,
+				year: input.year,
 			},
 		})
 	}),
@@ -82,18 +115,6 @@ export const assignmentRouter = router({
 		}
 
 		if (ctx.ability.cannot('read', subject('Assignement', assignement))) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-			})
-		}
-
-		if (ctx.ability.cannot('update', subject('Assignement', assignement))) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-			})
-		}
-
-		if (ctx.ability.cannot('create', subject('Assignement', assignement))) {
 			throw new TRPCError({
 				code: 'FORBIDDEN',
 			})

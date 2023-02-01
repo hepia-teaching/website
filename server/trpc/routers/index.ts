@@ -16,7 +16,7 @@ export const appRouter = router({
 	room: roomRouter,
 	semester: semesterRouter,
 	teaching: teachingRouter,
-	assignements: assignmentRouter,
+	assignment: assignmentRouter,
 })
 
 export type AppRouter = typeof appRouter

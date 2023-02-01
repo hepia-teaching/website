@@ -3,6 +3,7 @@
 		data-theme="wireframe"
 		class="h-screen bg-base-200"
 	>
+		<Navbar />
 		<NuxtLayout>
 			<NuxtLoadingIndicator />
 			<NuxtPage />
