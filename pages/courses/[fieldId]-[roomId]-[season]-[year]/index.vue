@@ -17,15 +17,6 @@ const props = defineProps<{
 	course: Awaited<ReturnType<typeof $trpc.course.get.query>>
 }>()
 
-function onClickDeleteAssignement(idAssignement: number) {
-	props.course.assignements.forEach((assignement, id) => {
-		if (assignement.id == idAssignement) {
-			console.log('We have to remove this assignement:')
-			console.log(assignement)
-			props.course.assignements.splice(id, 1)
-		}
-	})
-}
 </script>
 
 <template>
@@ -50,11 +41,7 @@ function onClickDeleteAssignement(idAssignement: number) {
 					>
 						Edit
 					</NuxtLink>
-					<!-- 
-						v-if="$can('delete', subject('Assignements', assignement))"
-						<button
-						@click="onClickDeleteAssignement(assignement.id)"
-						class="btn-outline btn btn-error btn-sm">Delete</button> -->
+					
 					<NuxtLink
 						:to="`/assignements/delete/${assignement.id}-${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
 						class="btn-outline btn btn-error btn-sm"

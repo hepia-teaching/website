@@ -36,12 +36,6 @@ async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
 	)
 }
 
-// async function cancel() {
-
-// 	router.push(
-//         `/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`
-//         );
-// }
 </script>
 
 <template>
