@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { updateSchema, getRouteParamsSchema } from '@/zod/assignment'
+import dayjs from 'dayjs'
 
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
@@ -8,35 +9,37 @@ const assignement = await $trpc.assignment.get.query(params)
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: updateSchema,
+	initialValues: {
+		id: assignement.id,
+		fieldId: assignement.fieldId,
+		roomId: assignement.roomId,
+		year: assignement.year,
+		season: assignement.season,
+		description: assignement.description,
+		estimated_time: assignement.estimated_time,
+		startDate: dayjs(assignement.startDate).format('YYYY-MM-DD'),
+		endDate: assignement.endDate
+			? dayjs(assignement.endDate).format('YYYY-MM-DD')
+			: undefined,
+	},
 })
 
 const router = useRouter()
 
-const [{ data: courses }] = await Promise.all([
-	useAsyncData(() => $trpc.course.list.query()),
-])
-
-const coursesOptions = courses.value
-	?.map((course) => ({
-		label: course.description || `${course.field.name}`,
-		value: {
-			roomId: course.roomId,
-			fieldId: course.fieldId,
-			semester: {
-				year: course.year,
-				season: course.season,
-			},
-		},
-	}))
-	.filter((course) => {
-		return course.value.fieldId == assignement.course.fieldId
+async function submit({
+	startDate,
+	endDate,
+	...values
+}: z.infer<typeof updateSchema>) {
+	await $trpc.assignment.update.mutate({
+		...values,
+		startDate: dayjs(startDate).toISOString(),
+		endDate: endDate ? dayjs(endDate).toISOString() : undefined,
 	})
 
-async function submit(values: z.infer<typeof updateSchema>) {
-	await $trpc.assignment.update.mutate(values)
 	reset()
 	router.push(
-		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
+		`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`
 	)
 }
 </script>
@@ -46,40 +49,41 @@ async function submit(values: z.infer<typeof updateSchema>) {
 		<FancyTitle>Edit an Assignement</FancyTitle>
 		<ZodForm @submit="submit">
 			<ZodKit
-				label="ID"
 				type="hidden"
 				name="id"
-				:value="assignement.id"
 			/>
 			<ZodKit
-				label="Course"
-				type="select"
-				name="course"
-				:options="coursesOptions"
-				:selected="assignement.course"
-				data-testid="course"
+				type="hidden"
+				name="roomId"
+			/>
+			<ZodKit
+				type="hidden"
+				name="fieldId"
+			/>
+			<ZodKit
+				type="hidden"
+				name="year"
+			/>
+			<ZodKit
+				type="hidden"
+				name="season"
 			/>
 			<ZodKit
 				label="Start Date"
 				name="startDate"
 				type="date"
-				:value="new Date(assignement.startDate).toISOString().substring(0, 10)"
 				data-testid="start-date"
 			/>
 			<ZodKit
 				label="End Date"
 				name="endDate"
 				type="date"
-				:value="
-					new Date(assignement.endDate || 0).toISOString().substring(0, 10)
-				"
 				data-testid="end-date"
 			/>
 			<ZodKit
 				label="Estimated Time"
-				name="estimate_time"
+				name="estimated_time"
 				type="number"
-				:value="assignement.estimated_time"
 				data-testid="estimated-time"
 			/>
 
@@ -87,7 +91,6 @@ async function submit(values: z.infer<typeof updateSchema>) {
 				label="Description"
 				name="description"
 				type="textarea"
-				:value="assignement.description"
 				data-testid="description"
 			/>
 		</ZodForm>
