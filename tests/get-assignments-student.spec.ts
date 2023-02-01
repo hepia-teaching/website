@@ -2,33 +2,7 @@ import { test, expect } from '@playwright/test'
 import { PrismaClient, User, Field, Room, Semester } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import dayjs from 'dayjs'
-import * as jose from 'jose'
-
-type Cookie = {
-	value: string
-	name: 'auth_token'
-	path: '/'
-	httpOnly: true
-	domain: 'localhost'
-}
-
-async function getCookie(user: User): Promise<Cookie> {
-	const secret = new TextEncoder().encode('secret')
-	const alg = 'HS256'
-
-	const token = await new jose.SignJWT(user)
-		.setProtectedHeader({ alg })
-		.setExpirationTime('2h')
-		.sign(secret)
-
-	return {
-		name: 'auth_token',
-		value: token,
-		path: '/',
-		httpOnly: true,
-		domain: 'localhost',
-	}
-}
+import { Cookie, createCookie } from './utils/cookie'
 
 const student: Pick<User, 'email' | 'role'> = {
 	email: faker.datatype.uuid() + '@hepia.com',
@@ -117,7 +91,7 @@ test.beforeAll(async () => {
 		},
 	})
 
-	const cookie = await getCookie(createdStudent)
+	const cookie = await createCookie(createdStudent)
 	userCookies.set(createdStudent.email, cookie)
 })
 
