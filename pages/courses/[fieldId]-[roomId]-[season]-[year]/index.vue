@@ -16,7 +16,6 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 const props = defineProps<{
 	course: Awaited<ReturnType<typeof $trpc.course.get.query>>
 }>()
-
 </script>
 
 <template>
@@ -41,7 +40,7 @@ const props = defineProps<{
 					>
 						Edit
 					</NuxtLink>
-					
+
 					<NuxtLink
 						:to="`/assignements/delete/${assignement.id}-${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
 						class="btn-outline btn btn-error btn-sm"

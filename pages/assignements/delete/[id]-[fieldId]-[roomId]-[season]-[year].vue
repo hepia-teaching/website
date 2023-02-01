@@ -35,7 +35,6 @@ async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
 		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
 	)
 }
-
 </script>
 
 <template>
