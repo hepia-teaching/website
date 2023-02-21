@@ -25,7 +25,11 @@ export const assignmentRouter = router({
 				},
 			},
 			include: {
-				course: true,
+				course: {
+					include: {
+						field: true
+					}
+				},
 			},
 		})
 	}),
