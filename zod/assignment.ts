@@ -1,6 +1,5 @@
 import { Season } from '@prisma/client'
 import { z } from 'zod'
-// REMOVE LATER import { createSchema as createSemesterSchema } from './semester'
 import { createSchema as createCourseSchema } from './course'
 
 const roomId = z.number()
@@ -18,14 +17,17 @@ export const createSchema = z.object({
 
 export const updateSchema = z.object({
 	id: z.number(),
-	course: createCourseSchema,
-	startDate: z.coerce.date(),
-	endDate: z.coerce.date(),
+	roomId: createCourseSchema.shape.roomId,
+	fieldId: createCourseSchema.shape.fieldId,
+	year: createCourseSchema.shape.semester.shape.year,
+	season: createCourseSchema.shape.semester.shape.season,
+	startDate: z.string(),
+	endDate: z.string().optional(),
 	description,
-	estimate_time: z.coerce.number().min(0),
+	estimated_time: z.coerce.number().min(0),
 })
 
-export const deleteSchemaAssignement = z.object({
+export const deleteSchema = z.object({
 	id: z.number(),
 	roomId: createCourseSchema.shape.roomId,
 	fieldId: createCourseSchema.shape.fieldId,

@@ -1,38 +1,44 @@
 <script setup lang="ts">
 import { z } from 'zod'
-import { deleteSchemaAssignement, getRouteParamsSchema } from '@/zod/assignment'
+import { deleteSchema, getRouteParamsSchema } from '@/zod/assignment'
+import dayjs from 'dayjs'
 
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
-const assignement = await $trpc.assignements.get.query(params)
+const assignement = await $trpc.assignment.get.query(params)
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
-	schema: deleteSchemaAssignement,
+	schema: deleteSchema,
+	initialValues: {
+		id: assignement.id,
+		fieldId: assignement.fieldId,
+		roomId: assignement.roomId,
+		year: assignement.year,
+		season: assignement.season,
+		description: assignement.description,
+		estimated_time: assignement.estimated_time,
+		startDate: dayjs(assignement.startDate).format('YYYY-MM-DD'),
+		endDate: assignement.endDate
+			? dayjs(assignement.endDate).format('YYYY-MM-DD')
+			: undefined,
+	},
 })
 
 const router = useRouter()
 
-const [{ data: courses }] = await Promise.all([
-	useAsyncData(() => $trpc.course.list.query()),
-])
-
-const coursesOptions = courses.value?.map((course) => ({
-	label: course.description || `${course.field.name}`,
-	value: {
-		roomId: course.roomId,
-		fieldId: course.fieldId,
-		semester: {
-			year: course.year,
-			season: course.season,
-		},
-	},
-}))
-
-async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
-	await $trpc.assignements.delete.mutate(values)
+async function submit({
+	startDate,
+	endDate,
+	...values
+}: z.infer<typeof deleteSchema>) {
+	await $trpc.assignment.delete.mutate({
+		...values,
+		startDate: dayjs(startDate).toISOString(),
+		endDate: endDate ? dayjs(endDate).toISOString() : undefined,
+	})
 	reset()
 	router.push(
-		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
+		`/courses/${values.fieldId}-${values.roomId}-${values.season}-${values.year}`
 	)
 }
 </script>
@@ -41,53 +47,18 @@ async function submit(values: z.infer<typeof deleteSchemaAssignement>) {
 	<div class="flex flex-col gap-3">
 		<FancyTitle>Please confirm the deletion</FancyTitle>
 		<ZodForm @submit="submit">
-			<ZodKit
-				label="ID"
-				type="hidden"
-				name="id"
-				:value="assignement.id"
-			/>
-			<ZodKit
-				label="Course"
-				type="select"
-				name="course"
-				disabled="true"
-				:options="coursesOptions"
-				:selected="assignement.course"
-			/>
-			<ZodKit
-				label="Start Date"
-				name="startDate"
-				type="date"
-				disabled="true"
-				:value="assignement.startDate"
-			/>
-			<ZodKit
-				label="End Date"
-				name="endDate"
-				type="date"
-				disabled="true"
-				:value="assignement.endDate"
-			/>
-			<ZodKit
-				label="Estimated Time"
-				name="estimate_time"
-				type="number"
-				disabled="true"
-				:value="assignement.estimated_time"
-			/>
-
-			<ZodKit
-				label="Description"
-				name="description"
-				type="textarea"
-				disabled="true"
-				:value="assignement.description"
-			/>
+			<ZodKit label="ID" type="hidden" name="id" />
+			<ZodKit type="hidden" name="roomId" />
+			<ZodKit type="hidden" name="fieldId" />
+			<ZodKit type="hidden" name="year" />
+			<ZodKit type="hidden" name="season" />
+			<ZodKit label="Start Date" name="startDate" type="date" disabled="true" />
+			<ZodKit label="End Date" name="endDate" type="date" disabled="true" />
+			<ZodKit label="Estimated Time" name="estimated_time" type="number" disabled="true" />
+			<ZodKit label="Description" name="description" type="textarea" disabled="true" />
 			<NuxtLink
 				:to="`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
-				class="btn-outline btn-error btn-md btn"
-			>
+				class="btn-outline btn-error btn-md btn mb-3 w-full">
 				Cancel
 			</NuxtLink>
 		</ZodForm>
