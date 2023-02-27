@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { Assignements } from '@prisma/client'
-import { deleteSchemaAssignement } from '@/zod/assignment'
+import { deleteSchema } from '@/zod/assignment'
 import dayjs from 'dayjs'
 import { subject } from '@casl/ability'
 
@@ -10,7 +10,7 @@ const { $trpc } = useNuxtApp()
 const router = useRouter()
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
-	schema: deleteSchemaAssignement,
+	schema: deleteSchema,
 })
 
 const props = defineProps<{

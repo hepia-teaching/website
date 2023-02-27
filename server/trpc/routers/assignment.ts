@@ -3,7 +3,7 @@ import {
 	createSchema,
 	updateSchema,
 	getSchema,
-	deleteSchemaAssignement,
+	deleteSchema,
 } from '@/zod/assignment'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
@@ -83,7 +83,7 @@ export const assignmentRouter = router({
 			})
 		}),
 	delete: protectedProcedure
-		.input(deleteSchemaAssignement)
+		.input(deleteSchema)
 		.mutation(async ({ input, ctx }) => {
 			try {
 				let res = await ctx.prisma.assignements.delete({
