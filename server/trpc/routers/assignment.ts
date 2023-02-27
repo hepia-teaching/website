@@ -85,40 +85,29 @@ export const assignmentRouter = router({
 	delete: protectedProcedure
 		.input(deleteSchema)
 		.mutation(async ({ input, ctx }) => {
-			try {
-				let res = await ctx.prisma.assignements.delete({
-					where: {
-						id_roomId_fieldId_year_season: {
-							id: input.id,
-							roomId: input.roomId,
-							fieldId: input.fieldId,
-							season: input.season,
-							year: input.year,
-						},
-					},
-					include: {
-						course: true,
-					},
+			if (ctx.ability.cannot('delete', 'Assignement')) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
 				})
-
-				if (ctx.ability.cannot('delete', subject('Assignement', res))) {
-					throw new TRPCError({
-						code: 'FORBIDDEN',
-					})
-				}
-
-				return res
-			} catch (e) {
-				if (e instanceof Prisma.PrismaClientKnownRequestError) {
-					if (e.code === 'P2025') {
-						throw new TRPCError({
-							code: 'NOT_FOUND',
-						})
-					}
-				}
-
-				throw e
 			}
+
+			const res = await ctx.prisma.assignements.delete({
+				where: {
+					id_roomId_fieldId_year_season: {
+						id: input.id,
+						roomId: input.roomId,
+						fieldId: input.fieldId,
+						season: input.season,
+						year: input.year,
+					},
+				},
+				include: {
+					course: true,
+				},
+			})
+			//REMOVE LATER
+			console.log(res)
+			return res
 		}),
 	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
 		const assignement = await ctx.prisma.assignements.findUnique({
