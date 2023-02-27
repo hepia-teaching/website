@@ -105,8 +105,6 @@ export const assignmentRouter = router({
 					course: true,
 				},
 			})
-			//REMOVE LATER
-			console.log(res)
 			return res
 		}),
 	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
