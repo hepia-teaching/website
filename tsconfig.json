@@ -3,5 +3,8 @@
 	"extends": "./.nuxt/tsconfig.json",
 	"vueCompilerOptions": {
 		"jsxTemplates": true
+	},
+	"compilerOptions": {
+		"types": ["dayjs/plugin/isBetween"]
 	}
 }
