@@ -3,8 +3,8 @@ import {
 	createSchema,
 	updateSchema,
 	getSchema,
-	deleteSchemaAssignement,
 	workloadAssignmentsSchema,
+	deleteSchema,
 } from '@/zod/assignment'
 import dayjs from 'dayjs'
 import { TRPCError } from '@trpc/server'
@@ -23,14 +23,14 @@ export const assignmentRouter = router({
 					},
 				},
 				endDate: {
-					gte: dayjs().startOf("day").toDate(),
+					gte: dayjs().startOf('day').toDate(),
 				},
 			},
 			include: {
 				course: {
 					include: {
-						field: true
-					}
+						field: true,
+					},
 				},
 			},
 			orderBy: [
@@ -43,42 +43,44 @@ export const assignmentRouter = router({
 			],
 		})
 	}),
-	workloadAssignments: protectedProcedure.input(workloadAssignmentsSchema).query(async ({ input, ctx }) => {
-		let courseStudents = await ctx.prisma.learning.findMany({
-			where: {
-				roomId: input.roomId,
-				fieldId: input.fieldId,
-				year: input.year,
-				season: input.season
-			},
-			select: {
-				studentId: true
-			}
-		})
+	workloadAssignments: protectedProcedure
+		.input(workloadAssignmentsSchema)
+		.query(async ({ input, ctx }) => {
+			let courseStudents = await ctx.prisma.learning.findMany({
+				where: {
+					roomId: input.roomId,
+					fieldId: input.fieldId,
+					year: input.year,
+					season: input.season,
+				},
+				select: {
+					studentId: true,
+				},
+			})
 
-		let courseStudentsIds = courseStudents.map(student => student.studentId)
+			let courseStudentsIds = courseStudents.map((student) => student.studentId)
 
-		return await ctx.prisma.assignements.findMany({
+			return await ctx.prisma.assignements.findMany({
 				where: {
 					course: {
 						learning: {
 							some: {
 								studentId: {
-									in: courseStudentsIds
-								}
+									in: courseStudentsIds,
+								},
 							},
 						},
 					},
 				},
-			include: {
-				course: {
-					include: {
-						field: true
-					}
+				include: {
+					course: {
+						include: {
+							field: true,
+						},
+					},
 				},
-			},
-		})
-	}),
+			})
+		}),
 	create: protectedProcedure
 		.input(createSchema)
 		.mutation(async ({ input, ctx }) => {
@@ -133,42 +135,29 @@ export const assignmentRouter = router({
 			})
 		}),
 	delete: protectedProcedure
-		.input(deleteSchemaAssignement)
+		.input(deleteSchema)
 		.mutation(async ({ input, ctx }) => {
-			try {
-				let res = await ctx.prisma.assignements.delete({
-					where: {
-						id_roomId_fieldId_year_season: {
-							id: input.id,
-							roomId: input.roomId,
-							fieldId: input.fieldId,
-							season: input.season,
-							year: input.year,
-						},
-					},
-					include: {
-						course: true,
-					},
+			if (ctx.ability.cannot('delete', 'Assignement')) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
 				})
-
-				if (ctx.ability.cannot('delete', subject('Assignement', res))) {
-					throw new TRPCError({
-						code: 'FORBIDDEN',
-					})
-				}
-
-				return res
-			} catch (e) {
-				if (e instanceof Prisma.PrismaClientKnownRequestError) {
-					if (e.code === 'P2025') {
-						throw new TRPCError({
-							code: 'NOT_FOUND',
-						})
-					}
-				}
-
-				throw e
 			}
+
+			const res = await ctx.prisma.assignements.delete({
+				where: {
+					id_roomId_fieldId_year_season: {
+						id: input.id,
+						roomId: input.roomId,
+						fieldId: input.fieldId,
+						season: input.season,
+						year: input.year,
+					},
+				},
+				include: {
+					course: true,
+				},
+			})
+			return res
 		}),
 	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
 		const assignement = await ctx.prisma.assignements.findUnique({

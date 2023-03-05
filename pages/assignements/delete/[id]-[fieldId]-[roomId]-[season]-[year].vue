@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { z } from 'zod'
-import { deleteSchemaAssignement, getRouteParamsSchema } from '@/zod/assignment'
+import { deleteSchema, getRouteParamsSchema } from '@/zod/assignment'
 import dayjs from 'dayjs'
 
 const { $trpc } = useNuxtApp()
@@ -8,7 +8,7 @@ const params = useParams(getRouteParamsSchema)
 const assignement = await $trpc.assignment.get.query(params)
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
-	schema: deleteSchemaAssignement,
+	schema: deleteSchema,
 	initialValues: {
 		id: assignement.id,
 		fieldId: assignement.fieldId,
@@ -30,7 +30,7 @@ async function submit({
 	startDate,
 	endDate,
 	...values
-}: z.infer<typeof deleteSchemaAssignement>) {
+}: z.infer<typeof deleteSchema>) {
 	await $trpc.assignment.delete.mutate({
 		...values,
 		startDate: dayjs(startDate).toISOString(),
