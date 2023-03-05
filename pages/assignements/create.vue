@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { createSchema } from '@/zod/assignment'
+import dayjs from 'dayjs';
 const { $trpc } = useNuxtApp()
-
-const { ZodForm, ZodKit, reset } = useZodFormKit({
-	schema: createSchema,
-})
 
 const router = useRouter()
 const courses = await $trpc.course.list.query()
@@ -22,6 +19,23 @@ const coursesOptions = courses.map((course) => ({
 	},
 }))
 
+let defaultCourse = coursesOptions[0].value
+
+const { ZodForm, ZodKit, reset } = useZodFormKit({
+	schema: createSchema,
+	initialValues: {
+		course: {
+			roomId: defaultCourse.roomId,
+			fieldId: defaultCourse.fieldId,
+			semester: defaultCourse.semester
+		},
+		startDate: dayjs().toDate(),
+		endDate: dayjs().add(7, "day").toDate()
+	}
+})
+
+//let classAssignments = await $trpc.assignment.workloadAssignments.query(defaultCourse.roomId, defaultCourse.fieldId, defaultCourse.semester.year, defaultCourse. )
+
 async function submit(values: z.infer<typeof createSchema>) {
 	await $trpc.assignment.create.mutate(values)
 	reset()
@@ -29,6 +43,8 @@ async function submit(values: z.infer<typeof createSchema>) {
 		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
 	)
 }
+
+
 </script>
 
 <template>
@@ -61,9 +77,9 @@ async function submit(values: z.infer<typeof createSchema>) {
 				data-testid="estimated-time"
 			/>
 			<ZodKit
-				label="Description"
+				label="Title of assignment"
 				name="description"
-				type="textarea"
+				type="text"
 				data-testid="description"
 			/>
 		</ZodForm>

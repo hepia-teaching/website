@@ -4,7 +4,9 @@ import {
 	updateSchema,
 	getSchema,
 	deleteSchemaAssignement,
+	workloadAssignmentsSchema,
 } from '@/zod/assignment'
+import dayjs from 'dayjs'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 import { Prisma } from '@prisma/client'
@@ -21,9 +23,53 @@ export const assignmentRouter = router({
 					},
 				},
 				endDate: {
-					gte: new Date(),
+					gte: dayjs().startOf("day").toDate(),
 				},
 			},
+			include: {
+				course: {
+					include: {
+						field: true
+					}
+				},
+			},
+			orderBy: [
+				{
+					endDate: 'asc',
+				},
+				{
+					description: 'asc',
+				},
+			],
+		})
+	}),
+	workloadAssignments: protectedProcedure.input(workloadAssignmentsSchema).query(async ({ input, ctx }) => {
+		let courseStudents = await ctx.prisma.learning.findMany({
+			where: {
+				roomId: input.roomId,
+				fieldId: input.fieldId,
+				year: input.year,
+				season: input.season
+			},
+			select: {
+				studentId: true
+			}
+		})
+
+		let courseStudentsIds = courseStudents.map(student => student.studentId)
+
+		return await ctx.prisma.assignements.findMany({
+				where: {
+					course: {
+						learning: {
+							some: {
+								studentId: {
+									in: courseStudentsIds
+								}
+							},
+						},
+					},
+				},
 			include: {
 				course: {
 					include: {

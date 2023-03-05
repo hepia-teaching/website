@@ -55,3 +55,13 @@ export const getRouteParamsSchema = z.object({
 	year: z.coerce.number(),
 	season: z.nativeEnum(Season),
 })
+
+
+export const workloadAssignmentsSchema = z.object({
+	roomId: createCourseSchema.shape.roomId,
+	fieldId: createCourseSchema.shape.fieldId,
+	year: createCourseSchema.shape.semester.shape.year,
+	season: createCourseSchema.shape.semester.shape.season,
+	startDate: z.string(),
+	endDate: z.string(),
+})
