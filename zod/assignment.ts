@@ -55,7 +55,6 @@ export const getRouteParamsSchema = z.object({
 	season: z.nativeEnum(Season),
 })
 
-
 export const workloadAssignmentsSchema = z.object({
 	roomId: createCourseSchema.shape.roomId,
 	fieldId: createCourseSchema.shape.fieldId,

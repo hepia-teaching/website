@@ -101,15 +101,16 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 
 			function onNode(node: FormKitNode) {
 				if (initialValues?.[node.name]) {
-					if((initialValues[node.name] as any) instanceof Date){
+					if ((initialValues[node.name] as any) instanceof Date) {
 						// If its a date, this bastards only works with strings and not Date objects
-						node.input(dayjs(initialValues[node.name]).format("YYYY-MM-DD"), false)
-					}
-					else{
+						node.input(
+							dayjs(initialValues[node.name]).format('YYYY-MM-DD'),
+							false
+						)
+					} else {
 						node.input(initialValues[node.name], false)
 					}
 				}
-
 			}
 
 			return () =>
@@ -133,7 +134,7 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 
 	return { ZodForm, ZodKit, reset } as {
 		ZodForm: typeof ZodForm & {
-			new(): {
+			new (): {
 				$slots: {
 					default: (option: {
 						value: { [key in keyof z.infer<T>]: unknown }
