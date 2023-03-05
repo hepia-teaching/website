@@ -1,7 +1,7 @@
 <template>
 	<div
-		data-theme="wireframe"
-		class="h-screen bg-base-200"
+		data-theme="light"
+		class="min-h-screen bg-base-200"
 	>
 		<Navbar />
 		<NuxtLayout>

@@ -10,6 +10,7 @@ import { FormKit } from '@formkit/vue'
 import { FormKitNode } from '@formkit/core'
 import { reset as formkitReset } from '@formkit/core'
 import { v4 as uuidv4 } from 'uuid'
+import dayjs from 'dayjs'
 
 export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 	schema,
@@ -99,8 +100,17 @@ export function useZodFormKit<T extends z.ZodObject<any, any, any>>({
 			}
 
 			function onNode(node: FormKitNode) {
-				if (initialValues?.[node.name])
-					node.input(initialValues[node.name], false)
+				if (initialValues?.[node.name]) {
+					if ((initialValues[node.name] as any) instanceof Date) {
+						// If its a date, this bastards only works with strings and not Date objects
+						node.input(
+							dayjs(initialValues[node.name]).format('YYYY-MM-DD'),
+							false
+						)
+					} else {
+						node.input(initialValues[node.name], false)
+					}
+				}
 			}
 
 			return () =>

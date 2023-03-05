@@ -107,9 +107,7 @@ test('Get assignments as student', async ({ browser }) => {
 	const page = await browserContext.newPage()
 
 	await page.goto('http://localhost:3000/')
-	await expect(page.getByTestId('homepage-title')).toHaveText(
-		'Liste des rendus et échéances'
-	)
+	await expect(page.getByTestId('homepage-title')).toHaveText('To-Do List')
 
 	expect(await page.getByTestId('assignments').textContent()).toContain(
 		assignmentDescription

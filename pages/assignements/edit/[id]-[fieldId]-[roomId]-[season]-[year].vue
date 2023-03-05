@@ -88,9 +88,9 @@ async function submit({
 			/>
 
 			<ZodKit
-				label="Description"
+				label="Title of assignment"
 				name="description"
-				type="textarea"
+				type="text"
 				data-testid="description"
 			/>
 		</ZodForm>
