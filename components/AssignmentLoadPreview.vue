@@ -9,31 +9,36 @@ type Assignment = Awaited<
 	ReturnType<typeof $trpc.assignment.myAssignments.query>
 >[0]
 
-const props = defineProps<{ newAssignment: Assignment; others: Assignment[] }>()
-let startDate = dayjs(props.newAssignment.startDate)
-let endDate = dayjs(props.newAssignment.endDate)
-let nbDays = endDate.diff(startDate, 'day')
+const props = defineProps<{
+	newAssignment: Pick<Assignment, 'startDate' | 'endDate'>
+	others: Assignment[]
+}>()
 
-let workloadPerDay = Array.from({ length: nbDays }).map((_, key) => {
-	return props.others.reduce((acc, assignment) => {
-		if (
-			startDate
-				.add(key, 'day')
-				.isBetween(assignment.startDate, assignment.endDate)
-		) {
-			let assignmentNbDays = dayjs(assignment.endDate).diff(
-				assignment.startDate,
-				'day'
-			)
-			let assignmentWorkloadPerDay =
-				assignment.estimated_time / assignmentNbDays
+const startDate = computed(() => dayjs(props.newAssignment.startDate))
+const endDate = computed(() => dayjs(props.newAssignment.endDate))
+const nbDays = computed(() => endDate.value.diff(startDate.value, 'day'))
+const workloadPerDay = computed(() =>
+	Array.from({ length: nbDays.value }).map((_, key) => {
+		return props.others.reduce((acc, assignment) => {
+			if (
+				startDate.value
+					.add(key, 'day')
+					.isBetween(assignment.startDate, assignment.endDate)
+			) {
+				const assignmentNbDays = dayjs(assignment.endDate).diff(
+					assignment.startDate,
+					'day'
+				)
+				const assignmentWorkloadPerDay =
+					assignment.estimated_time / assignmentNbDays
 
-			acc += assignmentWorkloadPerDay
-		}
+				acc += assignmentWorkloadPerDay
+			}
 
-		return acc
-	}, 0)
-})
+			return acc
+		}, 0)
+	})
+)
 </script>
 
 <template>

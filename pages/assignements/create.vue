@@ -2,10 +2,6 @@
 import { z } from 'zod'
 import { createSchema } from '@/zod/assignment'
 
-definePageMeta({
-	layout: false,
-})
-
 const { $trpc, $dayjs } = useNuxtApp()
 const router = useRouter()
 const courses = await $trpc.course.list.query()
@@ -86,7 +82,7 @@ watchEffect(() => console.log(error.value))
 </script>
 
 <template>
-	<main class="grid grid-cols-2">
+	<main class="flex flex-col gap-3">
 		<div class="flex flex-col gap-3">
 			<FancyTitle>Create a new Assignment</FancyTitle>
 			<ZodForm @submit="submit">
@@ -129,7 +125,15 @@ watchEffect(() => console.log(error.value))
 			</ZodForm>
 		</div>
 		<aside>
-			<pre>{{ JSON.stringify(data, null, 2) }}</pre>
+			<template v-if="data">
+				<AssignmentLoadPreview
+					:new-assignment="{
+						startDate: selectedStartDate,
+						endDate: selectedEndDate,
+					}"
+					:others="data"
+				/>
+			</template>
 		</aside>
 	</main>
 </template>
