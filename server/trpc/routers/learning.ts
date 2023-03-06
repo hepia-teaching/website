@@ -11,12 +11,10 @@ export const learningRouter = router({
 	create: protectedProcedure
 		.input(createManySchema)
 		.mutation(async ({ input, ctx }) => {
-			return await ctx.prisma.learning.createMany(
-				{
-					data: input,
-					skipDuplicates: true,
-				},
-			)
+			return await ctx.prisma.learning.createMany({
+				data: input,
+				skipDuplicates: true,
+			})
 		}),
 	// delete: protectedProcedure
 	// 	.input(loginSchema)

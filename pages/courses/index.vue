@@ -14,9 +14,7 @@ async function onClickDelete(course: Course) {
 	// })
 	// await refresh()
 }
-async function onClickRedirect(course: Course) {
-
-}
+async function onClickRedirect(course: Course) {}
 </script>
 
 <template>
@@ -37,16 +35,16 @@ async function onClickRedirect(course: Course) {
 						v-for="(course, key) in courses"
 						:key="key"
 					>
-					<NuxtLink
-						v-for="(course, key) in courses"
-						:key="key"
-						:to="`/courses/assignStudent`"
-						class="card bg-base-100 shadow-xl"
-					>
-						<div class="card-body">
-							<h2 class="card-title">{{ course.field.name }}</h2>
-						</div>
-					</NuxtLink>
+						<NuxtLink
+							v-for="(course, key) in courses"
+							:key="key"
+							:to="`/courses/assignStudent`"
+							class="card bg-base-100 shadow-xl"
+						>
+							<div class="card-body">
+								<h2 class="card-title">{{ course.field.name }}</h2>
+							</div>
+						</NuxtLink>
 						<th>{{ course.field.name }}</th>
 						<th>{{ course.season }} {{ course.year }}</th>
 						<th>{{ course.room.number }}</th>
