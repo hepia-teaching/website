@@ -3,5 +3,12 @@
 	"extends": "./.nuxt/tsconfig.json",
 	"vueCompilerOptions": {
 		"jsxTemplates": true
+	},
+	"compilerOptions": {
+		"types": [
+			"dayjs/plugin/utc",
+			"dayjs/plugin/isBetween",
+			"dayjs/plugin/customParseFormat"
+		]
 	}
 }
