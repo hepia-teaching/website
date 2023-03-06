@@ -63,6 +63,7 @@ const studentsOptions = students.value?.map((student) => ({
 				type="select"
 				name="course"
 				:options="coursesOptions"
+				data-testid="course"
 			/>
 			<ZodKit
 				label="Students"
