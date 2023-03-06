@@ -1,24 +1,22 @@
 import { protectedProcedure, publicProcedure, router } from '../trpc'
-import { createSchema } from '@/zod/learning'
+import { createManySchema, createSchema } from '@/zod/learning'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
 export const learningRouter = router({
-	list: publicProcedure.query(async ({ ctx }) => {
+	list: protectedProcedure.query(async ({ ctx }) => {
 		const learning = await ctx.prisma.learning.findMany()
 		return learning
 	}),
-	create: publicProcedure
-		.input(createSchema)
+	create: protectedProcedure
+		.input(createManySchema)
 		.mutation(async ({ input, ctx }) => {
-			const learning = await ctx.prisma.learning.createMany({
-				data: {
-					studentId: input.studentId,
-					...input.course,
+			return await ctx.prisma.learning.createMany(
+				{
+					data: input,
+					skipDuplicates: true,
 				},
-			})
-
-			return learning
+			)
 		}),
 	// delete: protectedProcedure
 	// 	.input(loginSchema)

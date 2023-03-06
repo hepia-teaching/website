@@ -7,31 +7,36 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
 })
 
-
 const { $trpc } = useNuxtApp()
-
-// async function submit(values: z.infer<typeof createSchema>) {
-// 	await $trpc.course.list.query
-// 	reset()
-// }
-
-const {data: courses} = await useAsyncData('get_all_courses', () =>
-	$trpc.course.list.query()
-	
-)
-const {data: students} = await useAsyncData('get_all_students', () =>
-	$trpc.user.list.query({role:Role.Student})
-	
-)
 
 async function submit(values: z.infer<typeof createSchema>) {
 	try {
-		await $trpc.learning.create.mutate(values)
+		const studentIds = values.studentId
+		let data: any = []
+		studentIds.forEach(studentId => {
+			data.push({
+				roomId: values.course.roomId,
+				fieldId: values.course.fieldId,
+				year: values.course.year,
+				season: values.course.season,
+				studentId: studentId
+			})
+		});
+		await $trpc.learning.create.mutate(data)
 		reset()
 	} catch {
 		alert('error')
 	}
 }
+
+const [{ data: courses }, { data: students }] = await Promise.all([
+	useAsyncData('courses', () => $trpc.course.list.query()),
+	useAsyncData('students', () =>
+		$trpc.user.list.query({
+			role: Role.Student
+		})
+	),
+])
 
 const coursesOptions = courses.value?.map((course) => ({
 	label: course.field.name || `${course.description}`,
@@ -51,26 +56,12 @@ const studentsOptions = students.value?.map((student) => ({
 </script>
 
 <template>
-	<FancyTitle>Assign Courses to Students</FancyTitle>
-	<ZodForm>
-		<ZodKit
-				label="Course"
-				type="select"
-				name="course"
-				:options="coursesOptions"
-			/>
-		<ZodKit
-				v-model="value"
-				label="Students"
-				type="checkbox"
-				name="course"
-				:options="studentsOptions"
-			/>
+	<div class="flex flex-col gap-3">
+		<FancyTitle>Assign Courses to Students</FancyTitle>
+		<ZodForm @submit="submit">
+			<ZodKit label="Course" type="select" name="course" :options="coursesOptions" />
+			<ZodKit label="Students" type="checkbox" name="studentId" validation="required|min:1"
+				:options="studentsOptions" />
 		</ZodForm>
-		
-		<!-- <div v-for="(course, key) in courses" :key="key">{{ course.field.name }}</div> -->
-		<!-- <div v-for="(user, key) in students" :key="key"> <input type="checkbox" id={{user.id.toString}}> {{ user.email }}</div> -->
-
-
-
+	</div>
 </template>

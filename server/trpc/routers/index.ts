@@ -7,6 +7,7 @@ import { roomRouter } from './room'
 import { semesterRouter } from './semester'
 import { teachingRouter } from './teaching'
 import { assignmentRouter } from './assignment'
+import { learningRouter } from './learning'
 
 export const appRouter = router({
 	user: userRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
 	field: fieldRouter,
 	room: roomRouter,
 	semester: semesterRouter,
+	learning: learningRouter,
 	teaching: teachingRouter,
 	assignment: assignmentRouter,
 })

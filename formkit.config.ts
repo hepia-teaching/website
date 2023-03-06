@@ -32,8 +32,10 @@ export default createConfig({
 			},
 			checkbox: {
 				outer: 'mb-5',
-				input: 'checkbox'
-			}
+				label: 'ml-5 text',
+				input: 'checkbox',
+				wrapper: 'flex',
+			},
 		}),
 	},
 })
