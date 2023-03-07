@@ -14,6 +14,12 @@ async function onClickDelete(course: Course) {
 	// })
 	// await refresh()
 }
+async function onClickEdit(course: Course) {
+	// await $trpc.field.delete.mutate({
+	// 	id: field.id,
+	// })
+	// await refresh()
+}
 async function onClickRedirect(course: Course) {}
 </script>
 
@@ -28,6 +34,7 @@ async function onClickRedirect(course: Course) {}
 						<th>Semester</th>
 						<th>Room</th>
 						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -38,6 +45,12 @@ async function onClickRedirect(course: Course) {}
 						<th>{{ course.field.name }}</th>
 						<th>{{ course.season }} {{ course.year }}</th>
 						<th>{{ course.room.number }}</th>
+						<th
+							v-if="$can('update', subject('Course', course))"
+							@click="() => onClickEdit(course)"
+						>
+							<button>edit</button>
+						</th>
 						<th
 							v-if="$can('delete', subject('Course', course))"
 							@click="() => onClickDelete(course)"

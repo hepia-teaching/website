@@ -56,6 +56,12 @@ export function defineAbilityFor(user: User | null) {
 			can('delete', 'Room')
 			can('delete', 'User')
 			can('delete', 'Assignement')
+
+			can('update', 'Course')
+			can('update', 'Field')
+			can('update', 'Room')
+			can('update', 'User')
+			can('update', 'Assignement')
 		},
 	}
 
