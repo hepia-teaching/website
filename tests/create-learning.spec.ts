@@ -3,6 +3,11 @@ import { PrismaClient, User, Field, Room, Semester } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { Cookie, createCookie } from './utils/cookie'
 
+const admin: Pick<User, 'email' | 'role'> = {
+	email: faker.datatype.uuid() + '@hepia.com',
+	role: 'Admin',
+}
+
 const student: Pick<User, 'email' | 'role'> = {
 	email: faker.datatype.uuid() + '@hepia.com',
 	role: 'Student',
@@ -62,16 +67,20 @@ test.beforeAll(async () => {
 		},
 	})
 
-	const createdStudent = await prisma.user.create({
+	await prisma.user.create({
 		data: student,
 	})
 
-	const cookie = await createCookie(createdStudent)
-	userCookies.set(createdStudent.email, cookie)
+	const createdAdmin = await prisma.user.create({
+		data: admin,
+	})
+
+	const cookie = await createCookie(createdAdmin)
+	userCookies.set(createdAdmin.email, cookie)
 })
 
 test(`Create assignement as teacher`, async ({ browser }) => {
-	const cookie = userCookies.get(student.email)
+	const cookie = userCookies.get(admin.email)
 
 	if (!cookie) {
 		throw new Error('no cookie found')
