@@ -33,7 +33,12 @@ const listings = [
 				class="card bg-base-100 shadow-xl"
 			>
 				<div class="card-body">
-					<h2 class="card-title">{{ text }}</h2>
+					<h2
+						class="card-title"
+						data-testid="text"
+					>
+						{{ text }}
+					</h2>
 				</div>
 			</NuxtLink>
 		</div>
