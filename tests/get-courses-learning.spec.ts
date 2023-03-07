@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { PrismaClient, User, Field, Room, Semester } from '@prisma/client'
 import { faker } from '@faker-js/faker'
-import dayjs from 'dayjs'
 import { Cookie, createCookie } from './utils/cookie'
 
 const admin: Pick<User, 'email' | 'role'> = {
@@ -108,11 +107,9 @@ test('Get courses as admin', async ({ browser }) => {
 
 	await page.getByTestId('course').selectOption({
 		label: field.name,
-		index: 0,
 	})
 
 	await page.getByTestId('course').selectOption({
 		label: field1.name,
-		index: 1,
 	})
 })
