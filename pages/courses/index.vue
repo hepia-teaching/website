@@ -14,6 +14,7 @@ async function onClickDelete(course: Course) {
 	// })
 	// await refresh()
 }
+async function onClickRedirect(course: Course) {}
 </script>
 
 <template>

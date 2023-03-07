@@ -46,7 +46,7 @@ export const assignmentRouter = router({
 	workloadAssignments: protectedProcedure
 		.input(workloadAssignmentsSchema)
 		.query(async ({ input, ctx }) => {
-			let courseStudents = await ctx.prisma.learning.findMany({
+			const courseStudents = await ctx.prisma.learning.findMany({
 				where: {
 					roomId: input.roomId,
 					fieldId: input.fieldId,
@@ -58,7 +58,9 @@ export const assignmentRouter = router({
 				},
 			})
 
-			let courseStudentsIds = courseStudents.map((student) => student.studentId)
+			const courseStudentsIds = courseStudents.map(
+				(student) => student.studentId
+			)
 
 			return await ctx.prisma.assignements.findMany({
 				where: {
@@ -70,6 +72,12 @@ export const assignmentRouter = router({
 								},
 							},
 						},
+					},
+					endDate: {
+						gte: input.startDate,
+					},
+					startDate: {
+						lte: input.endDate,
 					},
 				},
 				include: {
