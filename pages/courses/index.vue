@@ -35,6 +35,7 @@ async function onClickRedirect(course: Course) {}
 						<th>Room</th>
 						<th></th>
 						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,6 +57,14 @@ async function onClickRedirect(course: Course) {}
 							@click="() => onClickDelete(course)"
 						>
 							<button>delete</button>
+						</th>
+						<th>
+							<NuxtLink
+								:to="`/courses/edit/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
+								class="btn-outline btn btn-sm"
+								>
+								Edit
+							</NuxtLink>
 						</th>
 					</tr>
 				</tbody>
