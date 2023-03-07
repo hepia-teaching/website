@@ -47,6 +47,7 @@ async function submit(values: z.infer<typeof createSchema>) {
 				label="Room"
 				name="roomId"
 				type="select"
+				data-testid="room"
 				:options="roomsOptions"
 			/>
 
@@ -54,6 +55,7 @@ async function submit(values: z.infer<typeof createSchema>) {
 				label="Field"
 				name="fieldId"
 				type="select"
+				data-testid="field"
 				:options="fieldsOptions"
 			/>
 
@@ -61,6 +63,7 @@ async function submit(values: z.infer<typeof createSchema>) {
 				label="Semester"
 				name="semester"
 				type="select"
+				data-testid="semester"
 				:options="semestersOptions"
 			/>
 
