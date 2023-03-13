@@ -15,12 +15,17 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 		description: course.description,
 	},
 })
+
 const router = useRouter()
 async function submit({
 	...values
 }: z.infer<typeof updateSchema>) {
 	await $trpc.course.update.mutate({
-		...values,
+		roomId: values.roomId,
+		fieldId: values.fieldId,
+		year: values.year,
+		season: values.season,
+		description: values.description,
 	})
 	reset()
 	router.push(
