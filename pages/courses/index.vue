@@ -46,17 +46,13 @@ async function onClickRedirect(course: Course) {}
 						<th>{{ course.field.name }}</th>
 						<th>{{ course.season }} {{ course.year }}</th>
 						<th>{{ course.room.number }}</th>
-						<th
-							v-if="$can('update', subject('Course', course))"
-							@click="() => onClickEdit(course)"
-						>
-							<button>edit</button>
-						</th>
-						<th
-							v-if="$can('delete', subject('Course', course))"
-							@click="() => onClickDelete(course)"
-						>
-							<button>delete</button>
+						<th>
+							<NuxtLink
+								:to="`/courses/delete/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
+								class="btn-outline btn btn-sm"
+								>
+								Delete
+							</NuxtLink>
 						</th>
 						<th>
 							<NuxtLink
