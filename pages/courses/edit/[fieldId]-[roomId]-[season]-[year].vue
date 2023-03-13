@@ -2,11 +2,9 @@
 import { z } from 'zod'
 import { updateSchema, getRouteParamsSchema } from '@/zod/course'
 import dayjs from 'dayjs'
-
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
 const course = await $trpc.course.get.query(params)
-
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: updateSchema,
 	initialValues: {
@@ -17,19 +15,16 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 		description: course.description,
 	},
 })
-
 const router = useRouter()
-
 async function submit({
 	...values
 }: z.infer<typeof updateSchema>) {
 	await $trpc.course.update.mutate({
 		...values,
 	})
-
 	reset()
 	router.push(
-		`/courses/edit/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`
+		`/courses/`
 	)
 }
 </script>
