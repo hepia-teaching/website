@@ -74,30 +74,58 @@ export const courseRouter = router({
 		})
 	}),
 	update: protectedProcedure
-	.input(updateSchema)
-	.mutation(async ({ input, ctx }) => {
-		if (ctx.ability.cannot('update', 'Assignement')) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-			})
-		}
+		.input(updateSchema)
+		.mutation(async ({ input, ctx }) => {
+			if (ctx.ability.cannot('update', 'Assignement')) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
 
-		return await ctx.prisma.course.update({
-			where: {
-				roomId_fieldId_year_season: {
+			return await ctx.prisma.course.update({
+				where: {
+					roomId_fieldId_year_season: {
+						roomId: input.roomId,
+						fieldId: input.fieldId,
+						season: input.semester.season,
+						year: input.semester.year,
+					},
+				},
+				data: {
 					roomId: input.roomId,
 					fieldId: input.fieldId,
-					season: input.season,
-					year: input.year,
+					year: input.semester.year,
+					season: input.semester.season,
+					description: input.description,
 				},
-			},
-			data: {
-				roomId: input.roomId,
-				fieldId: input.fieldId,
-				year: input.year,
-				season: input.season,
-				description: input.description,
-			},
-		})
-	}),
+			})
+		}),
 })
+
+// update: protectedProcedure
+// .input(updateSchema)
+// .mutation(async ({ input, ctx }) => {
+// 	if (ctx.ability.cannot('update', 'Assignement')) {
+// 		throw new TRPCError({
+// 			code: 'FORBIDDEN',
+// 		})
+// 	}
+
+// 	return await ctx.prisma.course.update({
+// 		where: {
+// 			roomId_fieldId_year_season: {
+// 				roomId: input.roomId,
+// 				fieldId: input.fieldId,
+// 				season: input.season,
+// 				year: input.year,
+// 			},
+// 		},
+// 		data: {
+// 			roomId: input.roomId,
+// 			fieldId: input.fieldId,
+// 			year: input.year,
+// 			season: input.season,
+// 			description: input.description,
+// 		},
+// 	})
+// }),

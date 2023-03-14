@@ -50,7 +50,7 @@ async function onClickRedirect(course: Course) {}
 							<NuxtLink
 								:to="`/courses/delete/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
 								class="btn-outline btn btn-sm"
-								>
+							>
 								Delete
 							</NuxtLink>
 						</th>
@@ -58,7 +58,7 @@ async function onClickRedirect(course: Course) {}
 							<NuxtLink
 								:to="`/courses/edit/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
 								class="btn-outline btn btn-sm"
-								>
+							>
 								Edit
 							</NuxtLink>
 						</th>

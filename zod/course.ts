@@ -28,10 +28,16 @@ export const getRouteParamsSchema = z.object({
 })
 
 export const updateSchema = z.object({
-	roomId: z.number(),
-	fieldId: z.number(),
+	roomId: z.coerce.number(),
+	fieldId: z.coerce.number(),
 	description,
-	year: createSemesterSchema.shape.year,
-	season: createSemesterSchema.shape.season,
+	semester: createSemesterSchema
 })
 
+// export const updateSchema = z.object({
+// 	roomId: z.coerce.number(),
+// 	fieldId: z.coerce.number(),
+// 	description,
+// 	year: createSemesterSchema.shape.year,
+// 	season: createSemesterSchema.shape.season,
+// })
