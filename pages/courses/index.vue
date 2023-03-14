@@ -3,7 +3,6 @@ import { Course } from '@prisma/client'
 import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
-
 const { data: courses } = await useAsyncData('courses', () =>
 	$trpc.course.list.query()
 )

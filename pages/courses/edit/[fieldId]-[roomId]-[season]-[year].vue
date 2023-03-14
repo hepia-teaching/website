@@ -12,8 +12,10 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 	initialValues: {
 		roomId: course.roomId,
 		fieldId: course.fieldId,
-		year: course.year,
-		season: course.season,
+		semester: {
+			year: course.year,
+			season: course.season,
+		},
 		description: course.description,
 	},
 })
@@ -43,11 +45,13 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 	await $trpc.course.update.mutate({
 		roomId: values.roomId,
 		fieldId: values.fieldId,
+		// year: values.semester.year,
 		semester: values.semester,
+		// season: values.semester.season,
 		description: values.description,
 	})
 	reset()
-	router.push(`/courses/`)
+	router.push(`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`)
 }
 
 // const router = useRouter()
@@ -73,28 +77,25 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 				label="Room ID"
 				name="roomId"
 				type="select"
-				data-testid="roomId"
+				
 				:options=roomOptions
 			/>
 			<ZodKit
 				label="Field ID"
 				name="fieldId"
 				type="select"
-				data-testid="fieldID"
 				:options=fieldOptions
 			/>
 			<ZodKit
 				label="Semester"
 				name="semester"
 				type="select"
-				data-testid="semester"
 				:options=semesterOptions
 			/>
 			<ZodKit
 				label="Title of course"
 				name="description"
 				type="text"
-				data-testid="description"
 			/>
 		</ZodForm>
 	</div>
