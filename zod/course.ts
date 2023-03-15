@@ -32,14 +32,4 @@ export const updateSchema = z.object({
 	fieldId: z.coerce.number(),
 	description,
 	semester: createSemesterSchema,
-	// year: createSemesterSchema.shape.year,
-	// season: createSemesterSchema.shape.season,
 })
-
-// export const updateSchema = z.object({
-// 	roomId: z.coerce.number(),
-// 	fieldId: z.coerce.number(),
-// 	description,
-// 	year: createSemesterSchema.shape.year,
-// 	season: createSemesterSchema.shape.season,
-// })

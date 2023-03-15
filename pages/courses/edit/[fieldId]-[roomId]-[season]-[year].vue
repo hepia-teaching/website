@@ -45,28 +45,13 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 	await $trpc.course.update.mutate({
 		roomId: values.roomId,
 		fieldId: values.fieldId,
-		// year: values.semester.year,
 		semester: values.semester,
-		// season: values.semester.season,
 		description: values.description,
 	})
 	reset()
 	router.push(`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`)
 }
 
-// const router = useRouter()
-// async function submit({ ...values }: z.infer<typeof updateSchema>) {
-// 	console.log(values)
-// 	await $trpc.course.update.mutate({
-// 		roomId: values.roomId,
-// 		fieldId: values.fieldId,
-// 		year: values.year,
-// 		season: values.season,
-// 		description: values.description,
-// 	})
-// 	reset()
-// 	router.push(`/courses/`)
-// }
 </script>
 
 <template>
@@ -77,19 +62,21 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 				label="Room ID"
 				name="roomId"
 				type="select"
-				
+				disabled="true"
 				:options=roomOptions
 			/>
 			<ZodKit
 				label="Field ID"
 				name="fieldId"
 				type="select"
+				disabled="true"
 				:options=fieldOptions
 			/>
 			<ZodKit
 				label="Semester"
 				name="semester"
 				type="select"
+				disabled="true"
 				:options=semesterOptions
 			/>
 			<ZodKit
@@ -100,16 +87,3 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 		</ZodForm>
 	</div>
 </template>
-<!-- <ZodKit
-label="Year"
-name="year"
-type="number"
-data-testid="year"
-/>
-<ZodKit
-label="Season"
-name="season"
-type="select"
-data-testid="season"
-:options=semesterOptions
-/> -->
