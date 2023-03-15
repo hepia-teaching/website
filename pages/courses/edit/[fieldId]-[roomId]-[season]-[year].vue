@@ -2,8 +2,8 @@
 import { z } from 'zod'
 import { updateSchema, getRouteParamsSchema } from '@/zod/course'
 import dayjs from 'dayjs'
-import { label } from '@formkit/inputs';
-import test from 'node:test';
+import { label } from '@formkit/inputs'
+import test from 'node:test'
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
 const course = await $trpc.course.get.query(params)
@@ -20,11 +20,13 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 	},
 })
 
-const [{ data: room }, {data: field}, {data: semester} ] = await Promise.all([
-	useAsyncData('course', () => $trpc.room.list.query()),
-	useAsyncData('field', () => $trpc.field.list.query()),
-	useAsyncData('semester', () => $trpc.semester.list.query()),
-])
+const [{ data: room }, { data: field }, { data: semester }] = await Promise.all(
+	[
+		useAsyncData('course', () => $trpc.room.list.query()),
+		useAsyncData('field', () => $trpc.field.list.query()),
+		useAsyncData('semester', () => $trpc.semester.list.query()),
+	]
+)
 
 const roomOptions = room.value?.map((room) => ({
 	label: room.number,
@@ -49,9 +51,10 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 		description: values.description,
 	})
 	reset()
-	router.push(`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`)
+	router.push(
+		`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`
+	)
 }
-
 </script>
 
 <template>
@@ -63,21 +66,21 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 				name="roomId"
 				type="select"
 				disabled="true"
-				:options=roomOptions
+				:options="roomOptions"
 			/>
 			<ZodKit
 				label="Field ID"
 				name="fieldId"
 				type="select"
 				disabled="true"
-				:options=fieldOptions
+				:options="fieldOptions"
 			/>
 			<ZodKit
 				label="Semester"
 				name="semester"
 				type="select"
 				disabled="true"
-				:options=semesterOptions
+				:options="semesterOptions"
 			/>
 			<ZodKit
 				label="Title of course"
