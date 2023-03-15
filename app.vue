@@ -1,9 +1,7 @@
 <template>
-	<div
-		data-theme="light"
-		class="min-h-screen bg-base-200"
-	>
+	<div data-theme="light" class="min-h-screen bg-base-200">
 		<Navbar />
+		<Toasts />
 		<NuxtLayout>
 			<NuxtLoadingIndicator />
 			<NuxtPage />

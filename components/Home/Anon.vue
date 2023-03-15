@@ -11,13 +11,17 @@ const { ZodForm, ZodKit } = useZodFormKit({
 
 const store = useAuthStore()
 const router = useRouter()
+const toasts = useToastStore()
 
 async function submit(values: z.infer<typeof loginSchema>) {
 	try {
 		await store.login(values)
 		router.push('/')
 	} catch {
-		alert('error')
+		toasts.add({
+			content:"Incorrect username or password",
+			type:"error"
+		})
 	}
 }
 </script>
