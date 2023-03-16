@@ -2,12 +2,14 @@
 import { z } from 'zod'
 import { createSchema } from '@/zod/learning'
 import { Role } from '@prisma/client'
+import toast from '~~/plugins/toast';
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
 })
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 async function submit(values: z.infer<typeof createSchema>) {
 	try {
@@ -24,8 +26,9 @@ async function submit(values: z.infer<typeof createSchema>) {
 		})
 		await $trpc.learning.create.mutate(data)
 		reset()
-	} catch {
-		alert('error')
+		toasts.success("Successfully added learning.")
+	} catch (e){
+		toasts.error(e)
 	}
 }
 
