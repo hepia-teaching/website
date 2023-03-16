@@ -19,7 +19,7 @@ async function onClickDelete(user: User) {
 			email: user.email,
 		})
 		await refresh()
-		toasts.success("Successfully deleted user.")
+		toasts.success(`Successfully deleted user. (${user.email})`)
 	}
 	catch (e) {
 		toasts.error(e)

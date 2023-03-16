@@ -20,7 +20,7 @@ async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.user.create.mutate(values)
 		reset()
-		toasts.success("Successfully created used.")
+		toasts.success(`Successfully created ${values.role}`)
 	} catch(e) {
 		toasts.error(e)
 	}
