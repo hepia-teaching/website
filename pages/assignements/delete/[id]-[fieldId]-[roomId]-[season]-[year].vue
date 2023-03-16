@@ -2,8 +2,10 @@
 import { z } from 'zod'
 import { deleteSchema, getRouteParamsSchema } from '@/zod/assignment'
 import dayjs from 'dayjs'
+import toast from '~~/plugins/toast'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 const params = useParams(getRouteParamsSchema)
 const assignement = await $trpc.assignment.get.query(params)
 
@@ -31,15 +33,20 @@ async function submit({
 	endDate,
 	...values
 }: z.infer<typeof deleteSchema>) {
-	await $trpc.assignment.delete.mutate({
-		...values,
-		startDate: dayjs(startDate).toISOString(),
-		endDate: endDate ? dayjs(endDate).toISOString() : undefined,
-	})
-	reset()
-	router.push(
-		`/courses/${values.fieldId}-${values.roomId}-${values.season}-${values.year}`
-	)
+	try {
+		await $trpc.assignment.delete.mutate({
+			...values,
+			startDate: dayjs(startDate).toISOString(),
+			endDate: endDate ? dayjs(endDate).toISOString() : undefined,
+		})
+		reset()
+		router.push(
+			`/courses/${values.fieldId}-${values.roomId}-${values.season}-${values.year}`
+		)
+		toasts.success('Successfully deleted assignment')
+	} catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 

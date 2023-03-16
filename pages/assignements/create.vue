@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { createSchema } from '@/zod/assignment'
+import { TRPCError } from '@trpc/server'
+import toast from '~~/plugins/toast'
+import { type } from 'os'
 
 const { $trpc, $dayjs } = useNuxtApp()
 const router = useRouter()
+const toasts = useToastStore()
+
 const courses = await $trpc.course.list.query()
 
 const coursesOptions = courses.map((course) => ({
@@ -54,11 +59,16 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 })
 
 async function submit(values: z.infer<typeof createSchema>) {
-	await $trpc.assignment.create.mutate(values)
-	reset()
-	router.push(
-		`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
-	)
+	try {
+		await $trpc.assignment.create.mutate(values)
+		reset()
+		router.push(
+			`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
+		)
+		toasts.success('Successfully added assignment.')
+	} catch (e) {
+		toasts.error(e)
+	}
 }
 
 const { data, error } = await useAsyncData('workload', () =>

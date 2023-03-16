@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { createSchema } from '@/zod/course'
+import toast from '~~/plugins/toast'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
@@ -31,8 +33,13 @@ const semestersOptions = semesters.value?.map((semester) => ({
 }))
 
 async function submit(values: z.infer<typeof createSchema>) {
-	await $trpc.course.create.mutate(values)
-	reset()
+	try {
+		await $trpc.course.create.mutate(values)
+		reset()
+		toasts.success('Successfully added course.')
+	} catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 

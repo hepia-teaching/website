@@ -4,6 +4,7 @@ import { listSchema } from '@/zod/user'
 import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const route = useRoute()
 const where = listSchema.parse(route.query)
@@ -13,10 +14,15 @@ const { data: users, refresh } = await useAsyncData('users', () =>
 )
 
 async function onClickDelete(user: User) {
-	await $trpc.user.delete.mutate({
-		email: user.email,
-	})
-	await refresh()
+	try {
+		await $trpc.user.delete.mutate({
+			email: user.email,
+		})
+		await refresh()
+		toasts.success(`Successfully deleted user. (${user.email})`)
+	} catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 
