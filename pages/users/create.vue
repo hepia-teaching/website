@@ -14,13 +14,15 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 })
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.user.create.mutate(values)
 		reset()
-	} catch {
-		alert('error')
+		toasts.success("Successfully created used.")
+	} catch(e) {
+		toasts.error(e)
 	}
 }
 </script>

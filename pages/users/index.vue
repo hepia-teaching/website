@@ -4,6 +4,7 @@ import { listSchema } from '@/zod/user'
 import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const route = useRoute()
 const where = listSchema.parse(route.query)
@@ -13,10 +14,16 @@ const { data: users, refresh } = await useAsyncData('users', () =>
 )
 
 async function onClickDelete(user: User) {
-	await $trpc.user.delete.mutate({
-		email: user.email,
-	})
-	await refresh()
+	try {
+		await $trpc.user.delete.mutate({
+			email: user.email,
+		})
+		await refresh()
+		toasts.success("Successfully deleted user.")
+	}
+	catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 
@@ -31,17 +38,11 @@ async function onClickDelete(user: User) {
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="user in users"
-					:key="user.id"
-				>
+				<tr v-for="user in users" :key="user.id">
 					<th>{{ user.id }}</th>
 					<th>{{ user.email }}</th>
 					<th>{{ user.role }}</th>
-					<th
-						v-if="$can('delete', subject('User', user))"
-						@click="() => onClickDelete(user)"
-					>
+					<th v-if="$can('delete', subject('User', user))" @click="() => onClickDelete(user)">
 						<button>delete</button>
 					</th>
 				</tr>
