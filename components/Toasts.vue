@@ -108,7 +108,7 @@ const toastStore = useToastStore()
 			</button>
 		</div>
 		<button
-			class="badge-primary badge-outline badge indicator-end indicator-bottom indicator-item"
+			class="indicator-end indicator-bottom badge-primary badge-outline badge indicator-item"
 			@click="toastStore.removeAll()"
 			v-if="toastStore.toasts.length >= 2"
 		>
