@@ -3,16 +3,23 @@ import { Field } from '@prisma/client'
 import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const { data: fields, refresh } = await useAsyncData('fields', () =>
 	$trpc.field.list.query()
 )
 
 async function onClickDelete(field: Field) {
-	await $trpc.field.delete.mutate({
-		id: field.id,
-	})
-	await refresh()
+	try {
+		await $trpc.field.delete.mutate({
+			id: field.id,
+		})
+		await refresh()
+		toasts.success("Successfully deleted field.")
+	}
+	catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 
@@ -28,16 +35,10 @@ async function onClickDelete(field: Field) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr
-						v-for="field in fields"
-						:key="field.id"
-					>
+					<tr v-for="field in fields" :key="field.id">
 						<th>{{ field.id }}</th>
 						<th>{{ field.name }}</th>
-						<th
-							v-if="$can('delete', subject('Field', field))"
-							@click="() => onClickDelete(field)"
-						>
+						<th v-if="$can('delete', subject('Field', field))" @click="() => onClickDelete(field)">
 							<button>delete</button>
 						</th>
 					</tr>

@@ -3,17 +3,24 @@ import { Semester } from '@prisma/client'
 import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const { data: semesters, refresh } = await useAsyncData('semesters', () =>
 	$trpc.semester.list.query()
 )
 
 async function onClickDelete(semester: Semester) {
-	await $trpc.semester.delete.mutate({
-		year: semester.year,
-		season: semester.season
-	})
-	await refresh()
+	try {
+		await $trpc.semester.delete.mutate({
+			year: semester.year,
+			season: semester.season
+		})
+		await refresh()
+		toasts.success("Successfully deleted semester.")
+	}
+	catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 
@@ -29,15 +36,10 @@ async function onClickDelete(semester: Semester) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr
-						v-for="semester in semesters" :key="semester.name"
-					>
+					<tr v-for="semester in semesters" :key="semester.name">
 						<th>{{ semester.year }}</th>
 						<th>{{ semester.season }}</th>
-						<th
-							v-if="$can('delete', subject('Semester', semester))"
-							@click="() => onClickDelete(semester)"
-						>
+						<th v-if="$can('delete', subject('Semester', semester))" @click="() => onClickDelete(semester)">
 							<button>delete</button>
 						</th>
 					</tr>
