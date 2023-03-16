@@ -8,6 +8,8 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 })
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
+
 
 const [{ data: courses }, { data: teachers }] = await Promise.all([
 	useAsyncData('courses', () => $trpc.course.list.query()),
@@ -37,8 +39,9 @@ async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.teaching.create.mutate(values)
 		reset()
-	} catch {
-		alert('error')
+		toasts.success("Successfully added teaching.")
+	} catch (e){
+		toasts.error(e)
 	}
 }
 </script>
