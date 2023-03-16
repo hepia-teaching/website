@@ -8,8 +8,6 @@ const { data: courses } = await useAsyncData('my-courses', () =>
 	$trpc.course.myCourses.query()
 )
 
-courses.value = [];
-
 </script>
 
 <template>

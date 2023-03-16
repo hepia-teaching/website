@@ -1,4 +1,6 @@
+import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
+import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 
 export const useToastStore = defineStore('toast', () => {
     let idCounter = 0;
@@ -11,16 +13,24 @@ export const useToastStore = defineStore('toast', () => {
 
     const toasts = ref<Toast[]>([])
 
-    function add(toast: Omit<Toast, "id"> | TRPCError) {
-        if (toast instanceof TRPCError) {
-            toasts.value.push({
-                id: idCounter++,
-                content: toast.message,
+    function add(toast: Omit<Toast, "id">) {
+        toasts.value.push({ id: idCounter++, ...toast })
+    }
+
+    function error(e: unknown) {
+        console.log({e});
+
+        if (e instanceof TRPCClientError) {
+            add({
+                content: `[${e.name}] : ${e.message}`,
                 type: 'error'
             })
         }
         else {
-            toasts.value.push({ id: idCounter++, ...toast })
+            add({
+                content: "Something unexpected happened",
+                type: "error"
+            })
         }
     }
 
@@ -35,6 +45,7 @@ export const useToastStore = defineStore('toast', () => {
     return {
         toasts: toasts,
         add,
+        error,
         removeById,
         removeAll,
     }

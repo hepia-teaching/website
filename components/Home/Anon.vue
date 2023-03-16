@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { loginSchema } from '@/zod/auth'
+import { TRPCClientError } from '@trpc/client';
+import toast from '~~/plugins/toast';
 
 const { ZodForm, ZodKit } = useZodFormKit({
 	schema: loginSchema,
@@ -17,11 +19,8 @@ async function submit(values: z.infer<typeof loginSchema>) {
 	try {
 		await store.login(values)
 		router.push('/')
-	} catch {
-		toasts.add({
-			content:"Incorrect username or password",
-			type:"error"
-		})
+	} catch(e) {		
+		toasts.error(e);
 	}
 }
 </script>
