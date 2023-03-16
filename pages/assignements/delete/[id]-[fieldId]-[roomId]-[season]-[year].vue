@@ -2,7 +2,7 @@
 import { z } from 'zod'
 import { deleteSchema, getRouteParamsSchema } from '@/zod/assignment'
 import dayjs from 'dayjs'
-import toast from '~~/plugins/toast';
+import toast from '~~/plugins/toast'
 
 const { $trpc } = useNuxtApp()
 const toasts = useToastStore()
@@ -43,10 +43,9 @@ async function submit({
 		router.push(
 			`/courses/${values.fieldId}-${values.roomId}-${values.season}-${values.year}`
 		)
-		toasts.success("Successfully deleted assignment")
-	}
-	catch(e){
-		toasts.error(e);
+		toasts.success('Successfully deleted assignment')
+	} catch (e) {
+		toasts.error(e)
 	}
 }
 </script>
@@ -55,18 +54,55 @@ async function submit({
 	<div class="flex flex-col gap-3">
 		<FancyTitle>Please confirm the deletion</FancyTitle>
 		<ZodForm @submit="submit">
-			<ZodKit label="ID" type="hidden" name="id" />
-			<ZodKit type="hidden" name="roomId" />
-			<ZodKit type="hidden" name="fieldId" />
-			<ZodKit type="hidden" name="year" />
-			<ZodKit type="hidden" name="season" />
-			<ZodKit label="Start Date" name="startDate" type="date" disabled="true" />
-			<ZodKit label="End Date" name="endDate" type="date" disabled="true" />
-			<ZodKit label="Estimated Time" name="estimated_time" type="number" disabled="true" />
-			<ZodKit label="Description" name="description" type="textarea" disabled="true" />
+			<ZodKit
+				label="ID"
+				type="hidden"
+				name="id"
+			/>
+			<ZodKit
+				type="hidden"
+				name="roomId"
+			/>
+			<ZodKit
+				type="hidden"
+				name="fieldId"
+			/>
+			<ZodKit
+				type="hidden"
+				name="year"
+			/>
+			<ZodKit
+				type="hidden"
+				name="season"
+			/>
+			<ZodKit
+				label="Start Date"
+				name="startDate"
+				type="date"
+				disabled="true"
+			/>
+			<ZodKit
+				label="End Date"
+				name="endDate"
+				type="date"
+				disabled="true"
+			/>
+			<ZodKit
+				label="Estimated Time"
+				name="estimated_time"
+				type="number"
+				disabled="true"
+			/>
+			<ZodKit
+				label="Description"
+				name="description"
+				type="textarea"
+				disabled="true"
+			/>
 			<NuxtLink
 				:to="`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
-				class="btn-outline btn-error btn-md btn mb-3 w-full">
+				class="btn-outline btn-error btn-md btn mb-3 w-full"
+			>
 				Cancel
 			</NuxtLink>
 		</ZodForm>

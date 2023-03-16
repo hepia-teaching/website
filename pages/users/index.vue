@@ -20,8 +20,7 @@ async function onClickDelete(user: User) {
 		})
 		await refresh()
 		toasts.success(`Successfully deleted user. (${user.email})`)
-	}
-	catch (e) {
+	} catch (e) {
 		toasts.error(e)
 	}
 }
@@ -38,11 +37,17 @@ async function onClickDelete(user: User) {
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="user in users" :key="user.id">
+				<tr
+					v-for="user in users"
+					:key="user.id"
+				>
 					<th>{{ user.id }}</th>
 					<th>{{ user.email }}</th>
 					<th>{{ user.role }}</th>
-					<th v-if="$can('delete', subject('User', user))" @click="() => onClickDelete(user)">
+					<th
+						v-if="$can('delete', subject('User', user))"
+						@click="() => onClickDelete(user)"
+					>
 						<button>delete</button>
 					</th>
 				</tr>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { createSchema } from '@/zod/course'
-import toast from '~~/plugins/toast';
+import toast from '~~/plugins/toast'
 
 const { $trpc } = useNuxtApp()
 const toasts = useToastStore()
@@ -36,9 +36,8 @@ async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.course.create.mutate(values)
 		reset()
-		toasts.success("Successfully added course.")
-	}
-	catch (e) {
+		toasts.success('Successfully added course.')
+	} catch (e) {
 		toasts.error(e)
 	}
 }
@@ -47,14 +46,39 @@ async function submit(values: z.infer<typeof createSchema>) {
 <template>
 	<div class="flex flex-col gap-3">
 		<FancyTitle>Create a course</FancyTitle>
-		<ZodForm v-if="$can('create', 'Course')" @submit="submit">
-			<ZodKit label="Room" name="roomId" type="select" data-testid="room" :options="roomsOptions" />
+		<ZodForm
+			v-if="$can('create', 'Course')"
+			@submit="submit"
+		>
+			<ZodKit
+				label="Room"
+				name="roomId"
+				type="select"
+				data-testid="room"
+				:options="roomsOptions"
+			/>
 
-			<ZodKit label="Field" name="fieldId" type="select" data-testid="field" :options="fieldsOptions" />
+			<ZodKit
+				label="Field"
+				name="fieldId"
+				type="select"
+				data-testid="field"
+				:options="fieldsOptions"
+			/>
 
-			<ZodKit label="Semester" name="semester" type="select" data-testid="semester" :options="semestersOptions" />
+			<ZodKit
+				label="Semester"
+				name="semester"
+				type="select"
+				data-testid="semester"
+				:options="semestersOptions"
+			/>
 
-			<ZodKit label="Description" name="description" type="textarea" />
+			<ZodKit
+				label="Description"
+				name="description"
+				type="textarea"
+			/>
 		</ZodForm>
 	</div>
 </template>

@@ -8,5 +8,5 @@ export const createSchema = z.object({
 
 export const deleteSchema = z.object({
 	year: createSchema.shape.year,
-	season: createSchema.shape.season
+	season: createSchema.shape.season,
 })

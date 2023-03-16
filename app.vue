@@ -1,5 +1,8 @@
 <template>
-	<div data-theme="light" class="min-h-screen bg-base-200 relative">
+	<div
+		data-theme="light"
+		class="relative min-h-screen bg-base-200"
+	>
 		<Navbar />
 		<NuxtLayout>
 			<NuxtLoadingIndicator />

@@ -13,9 +13,8 @@ async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.field.create.mutate(values)
 		reset()
-		toasts.success("Successfully created field.")
-	}
-	catch (e) {
+		toasts.success('Successfully created field.')
+	} catch (e) {
 		toasts.error(e)
 	}
 }
@@ -25,7 +24,11 @@ async function submit(values: z.infer<typeof createSchema>) {
 	<div class="flex flex-col gap-3">
 		<FancyTitle>Create field</FancyTitle>
 		<ZodForm @submit="submit">
-			<ZodKit label="Name" type="text" name="name" />
+			<ZodKit
+				label="Name"
+				type="text"
+				name="name"
+			/>
 		</ZodForm>
 	</div>
 </template>

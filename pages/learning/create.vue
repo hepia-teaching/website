@@ -2,7 +2,7 @@
 import { z } from 'zod'
 import { createSchema } from '@/zod/learning'
 import { Role } from '@prisma/client'
-import toast from '~~/plugins/toast';
+import toast from '~~/plugins/toast'
 
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
@@ -26,8 +26,8 @@ async function submit(values: z.infer<typeof createSchema>) {
 		})
 		await $trpc.learning.create.mutate(data)
 		reset()
-		toasts.success("Successfully added learning.")
-	} catch (e){
+		toasts.success('Successfully added learning.')
+	} catch (e) {
 		toasts.error(e)
 	}
 }

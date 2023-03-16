@@ -13,12 +13,11 @@ async function onClickDelete(semester: Semester) {
 	try {
 		await $trpc.semester.delete.mutate({
 			year: semester.year,
-			season: semester.season
+			season: semester.season,
 		})
 		await refresh()
-		toasts.success("Successfully deleted semester.")
-	}
-	catch (e) {
+		toasts.success('Successfully deleted semester.')
+	} catch (e) {
 		toasts.error(e)
 	}
 }
@@ -36,10 +35,16 @@ async function onClickDelete(semester: Semester) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="semester in semesters" :key="semester.name">
+					<tr
+						v-for="semester in semesters"
+						:key="semester.name"
+					>
 						<th>{{ semester.year }}</th>
 						<th>{{ semester.season }}</th>
-						<th v-if="$can('delete', subject('Semester', semester))" @click="() => onClickDelete(semester)">
+						<th
+							v-if="$can('delete', subject('Semester', semester))"
+							@click="() => onClickDelete(semester)"
+						>
 							<button>delete</button>
 						</th>
 					</tr>

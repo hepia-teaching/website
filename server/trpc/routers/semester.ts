@@ -17,36 +17,36 @@ export const semesterRouter = router({
 		})
 	}),
 	delete: protectedProcedure
-	.input(deleteSchema)
-	.mutation(async ({ input, ctx }) => {
-		const semester = await ctx.prisma.semester.findUnique({
-			where: {
-				year_season: {
-					year: input.year,
-					season: input.season
-				}
-			},
-		})
-
-		if (!semester) {
-			throw new TRPCError({
-				code: 'NOT_FOUND',
+		.input(deleteSchema)
+		.mutation(async ({ input, ctx }) => {
+			const semester = await ctx.prisma.semester.findUnique({
+				where: {
+					year_season: {
+						year: input.year,
+						season: input.season,
+					},
+				},
 			})
-		}
 
-		if (ctx.ability.cannot('delete', subject('Semester', semester))) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
+			if (!semester) {
+				throw new TRPCError({
+					code: 'NOT_FOUND',
+				})
+			}
+
+			if (ctx.ability.cannot('delete', subject('Semester', semester))) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
+			await ctx.prisma.semester.delete({
+				where: {
+					year_season: {
+						year: input.year,
+						season: input.season,
+					},
+				},
 			})
-		}
-
-		await ctx.prisma.semester.delete({
-			where: {
-				year_season: {
-					year: input.year,
-					season: input.season
-				}
-			},
-		})
-	}),
+		}),
 })

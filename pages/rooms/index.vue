@@ -15,9 +15,8 @@ async function onClickDelete(room: Room) {
 			id: room.id,
 		})
 		await refresh()
-		toasts.success("Successfully deleted room.")
-	}
-	catch (e) {
+		toasts.success('Successfully deleted room.')
+	} catch (e) {
 		toasts.error(e)
 	}
 }
@@ -35,10 +34,16 @@ async function onClickDelete(room: Room) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="room in rooms" :key="room.id">
+					<tr
+						v-for="room in rooms"
+						:key="room.id"
+					>
 						<th>{{ room.id }}</th>
 						<th>{{ room.number }}</th>
-						<th v-if="$can('delete', subject('Room', room))" @click="() => onClickDelete(room)">
+						<th
+							v-if="$can('delete', subject('Room', room))"
+							@click="() => onClickDelete(room)"
+						>
 							<button>delete</button>
 						</th>
 					</tr>

@@ -15,9 +15,8 @@ async function onClickDelete(field: Field) {
 			id: field.id,
 		})
 		await refresh()
-		toasts.success("Successfully deleted field.")
-	}
-	catch (e) {
+		toasts.success('Successfully deleted field.')
+	} catch (e) {
 		toasts.error(e)
 	}
 }
@@ -35,10 +34,16 @@ async function onClickDelete(field: Field) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="field in fields" :key="field.id">
+					<tr
+						v-for="field in fields"
+						:key="field.id"
+					>
 						<th>{{ field.id }}</th>
 						<th>{{ field.name }}</th>
-						<th v-if="$can('delete', subject('Field', field))" @click="() => onClickDelete(field)">
+						<th
+							v-if="$can('delete', subject('Field', field))"
+							@click="() => onClickDelete(field)"
+						>
 							<button>delete</button>
 						</th>
 					</tr>

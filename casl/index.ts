@@ -1,4 +1,12 @@
-import { Course, Field, Role, User, Room, Assignements, Semester } from '@prisma/client'
+import {
+	Course,
+	Field,
+	Role,
+	User,
+	Room,
+	Assignements,
+	Semester,
+} from '@prisma/client'
 import { PureAbility, AbilityBuilder } from '@casl/ability'
 import { PrismaQuery, Subjects } from '@casl/prisma'
 import { createPrismaAbility } from './prisma'
@@ -10,7 +18,7 @@ export function defineAbilityFor(user: User | null) {
 		Course: Course
 		Field: Field
 		Room: Room
-		Semester : Semester
+		Semester: Semester
 		Assignement: Assignements
 	}
 

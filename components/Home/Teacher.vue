@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { dataToEsm } from '@rollup/pluginutils';
+import { dataToEsm } from '@rollup/pluginutils'
 
 const { $trpc } = useNuxtApp()
 const toasts = useToastStore()
@@ -7,7 +7,6 @@ const toasts = useToastStore()
 const { data: courses } = await useAsyncData('my-courses', () =>
 	$trpc.course.myCourses.query()
 )
-
 </script>
 
 <template>
@@ -21,7 +20,7 @@ const { data: courses } = await useAsyncData('my-courses', () =>
 				v-for="(course, key) in courses"
 				:key="key"
 				:to="`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
-				class="card bg-base-100 shadow-xl m-3"
+				class="card m-3 bg-base-100 shadow-xl"
 			>
 				<div class="card-body">
 					<h2 class="card-title">{{ course.field.name }}</h2>
