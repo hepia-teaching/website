@@ -17,8 +17,20 @@ export const useToastStore = defineStore('toast', () => {
         toasts.value.push({ id: idCounter++, ...toast })
     }
 
+    function info(message: string) {
+        add({ content: message, type: "info" })
+    }
+
+    function success(message: string) {
+        add({ content: message, type: "success" })
+    }
+
+    function warning(message: string) {
+        add({ content: message, type: "warning" })
+    }
+
     function error(e: unknown) {
-        console.log({e});
+        console.log({ e });
 
         if (e instanceof TRPCClientError) {
             add({
@@ -44,7 +56,9 @@ export const useToastStore = defineStore('toast', () => {
 
     return {
         toasts: toasts,
-        add,
+        info,
+        success,
+        warning,
         error,
         removeById,
         removeAll,
