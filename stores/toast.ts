@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 export const useToastStore = defineStore('toast', () => {
     let idCounter = 0;
 
@@ -9,8 +11,17 @@ export const useToastStore = defineStore('toast', () => {
 
     const toasts = ref<Toast[]>([])
 
-    function add(toast: Omit<Toast, "id">) {
-        toasts.value.push({id:idCounter++, ...toast})
+    function add(toast: Omit<Toast, "id"> | TRPCError) {
+        if (toast instanceof TRPCError) {
+            toasts.value.push({
+                id: idCounter++,
+                content: toast.message,
+                type: 'error'
+            })
+        }
+        else {
+            toasts.value.push({ id: idCounter++, ...toast })
+        }
     }
 
     function removeById(id: number) {

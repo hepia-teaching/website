@@ -1,11 +1,13 @@
 <template>
-	<div data-theme="light" class="min-h-screen bg-base-200">
+	<div data-theme="light" class="min-h-screen bg-base-200 relative">
 		<Navbar />
-		<Toasts />
 		<NuxtLayout>
 			<NuxtLoadingIndicator />
 			<NuxtPage />
 		</NuxtLayout>
+		<div class="absolute right-5 bottom-5 w-[34rem]">
+			<Toasts />
+		</div>
 	</div>
 </template>
 
