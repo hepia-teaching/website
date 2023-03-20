@@ -7,46 +7,35 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
 })
 
-const { $trpc, $toast } = useNuxtApp()
-
-const { data: semesters, refresh } = await useAsyncData('semesters', () =>
-	$trpc.semester.list.query()
-)
+const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 async function submit(values: z.infer<typeof createSchema>) {
 	try {
 		await $trpc.semester.create.mutate(values)
-		await refresh()
 		reset()
-	} catch {
-		$toast.add('oops')
+		toasts.success('Successfully created semester.')
+	} catch (e) {
+		toasts.error(e)
 	}
 }
 </script>
 
 <template>
-	<div class="mx-auto mt-5 flex h-full w-96 flex-col gap-3">
-		<FancyTitle>Semesters</FancyTitle>
+	<div class="flex flex-col gap-3">
+		<FancyTitle>Create semester</FancyTitle>
 		<ZodForm @submit="submit">
 			<ZodKit
+				label="Year"
 				type="number"
 				name="year"
-				:plugins="[castNumber]"
 			/>
-
 			<ZodKit
+				label="Season"
 				type="select"
 				name="season"
 				:options="Season"
 			/>
 		</ZodForm>
-		<ul>
-			<li
-				v-for="semester in semesters"
-				:key="`${semester.year}_${semester.season}`"
-			>
-				{{ semester.name }}
-			</li>
-		</ul>
 	</div>
 </template>

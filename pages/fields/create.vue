@@ -7,10 +7,16 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 })
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 async function submit(values: z.infer<typeof createSchema>) {
-	await $trpc.field.create.mutate(values)
-	reset()
+	try {
+		await $trpc.field.create.mutate(values)
+		reset()
+		toasts.success('Successfully created field.')
+	} catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 
