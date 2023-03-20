@@ -100,9 +100,12 @@ test(`Create assignement as teacher`, async ({ browser }) => {
 		'http://localhost:3000/api/trpc/assignment.create?batch=1'
 	)
 
-	await page.getByTestId('course').selectOption({
-		label: courseDescription,
-	})
+	await page.getByTestId('course').selectOption(
+		{
+			label: courseDescription,
+		},
+		{ force: true } // force because it's hidden for now
+	)
 
 	await page.getByTestId('start-date').fill('2023-02-02')
 	await page.getByTestId('end-date').fill('2023-02-12')

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { createSchema } from '@/zod/assignment'
-import { TRPCError } from '@trpc/server'
-import toast from '~~/plugins/toast'
-import { type } from 'os'
+
+definePageMeta({
+	layout: 'full',
+})
 
 const { $trpc, $dayjs } = useNuxtApp()
 const router = useRouter()
@@ -30,6 +31,7 @@ if (!defaultCourse) {
 }
 
 const selectedCourse = ref(defaultCourse)
+const selectedEstimatedTime = ref(10)
 const selectedStartDate = ref($dayjs.utc().startOf('day').format('YYYY-MM-DD'))
 const selectedEndDate = ref(
 	$dayjs.utc().startOf('day').add(7, 'day').format('YYYY-MM-DD')
@@ -47,6 +49,7 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 			fieldId: defaultCourse.fieldId,
 			semester: defaultCourse.semester,
 		},
+		estimate_time: selectedEstimatedTime.value,
 		startDate: $dayjs
 			.utc(selectedStartDate.value, 'YYYY-MM-DD')
 			.startOf('day')
@@ -92,18 +95,22 @@ watchEffect(() => console.log(error.value))
 </script>
 
 <template>
-	<main class="flex flex-col gap-3">
-		<div class="flex flex-col gap-3">
+	<main class="md container mx-auto grid grid-cols-2 gap-3">
+		<div class="col-span-2">
 			<FancyTitle>Create a new Assignment</FancyTitle>
+		</div>
+		<div class="col-span-2 flex flex-col gap-3 lg:col-span-1">
 			<ZodForm @submit="submit">
-				<ZodKit
-					v-model="selectedCourse"
-					label="Course"
-					type="select"
-					name="course"
-					:options="coursesOptions"
-					data-testid="course"
-				/>
+				<span class="hidden">
+					<ZodKit
+						v-model="selectedCourse"
+						label="Course"
+						type="select"
+						name="course"
+						:options="coursesOptions"
+						data-testid="course"
+					/>
+				</span>
 				<ZodKit
 					v-model="selectedStartDate"
 					:max="selectedEndDate"
@@ -121,6 +128,8 @@ watchEffect(() => console.log(error.value))
 					data-testid="end-date"
 				/>
 				<ZodKit
+					v-model="selectedEstimatedTime"
+					:min="0"
 					label="Estimated Time"
 					name="estimate_time"
 					type="number"
@@ -134,15 +143,24 @@ watchEffect(() => console.log(error.value))
 				/>
 			</ZodForm>
 		</div>
-		<aside>
+		<aside
+			class="col-span-2 flex flex-col items-center justify-center lg:col-span-1"
+		>
 			<template v-if="data">
-				<AssignmentLoadPreview
-					:new-assignment="{
-						startDate: selectedStartDate,
-						endDate: selectedEndDate,
-					}"
-					:others="data"
-				/>
+				<ClientOnly>
+					<template #fallback>
+						<p>Loading chart...</p>
+					</template>
+
+					<AssignmentLoadPreview
+						:new-assignment="{
+							startDate: selectedStartDate,
+							endDate: selectedEndDate,
+							estimated_time: selectedEstimatedTime,
+						}"
+						:others="data"
+					/>
+				</ClientOnly>
 			</template>
 		</aside>
 	</main>

@@ -7,7 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-	<NuxtLayout :name="store.user?.role === 'Student' ? 'student' : 'default'">
+	<NuxtLayout :name="store.user?.role === 'Student' ? 'full' : 'default'">
 		<template v-if="store.user">
 			<HomeAdmin v-if="store.user.role === 'Admin'" />
 			<HomeTeacher v-else-if="store.user.role === 'Teacher'" />
