@@ -26,3 +26,10 @@ export const getRouteParamsSchema = z.object({
 	year: z.coerce.number(),
 	season: z.nativeEnum(Season),
 })
+
+export const updateSchema = z.object({
+	roomId: z.coerce.number(),
+	fieldId: z.coerce.number(),
+	description,
+	semester: createSemesterSchema,
+})

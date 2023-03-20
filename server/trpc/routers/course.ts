@@ -1,5 +1,5 @@
 import { protectedProcedure, router } from '../trpc'
-import { createSchema, getSchema } from '@/zod/course'
+import { createSchema, getSchema, updateSchema } from '@/zod/course'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
 
@@ -73,4 +73,31 @@ export const courseRouter = router({
 			},
 		})
 	}),
+	update: protectedProcedure
+		.input(updateSchema)
+		.mutation(async ({ input, ctx }) => {
+			if (ctx.ability.cannot('update', 'Assignement')) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
+			return await ctx.prisma.course.update({
+				where: {
+					roomId_fieldId_year_season: {
+						roomId: input.roomId,
+						fieldId: input.fieldId,
+						season: input.semester.season,
+						year: input.semester.year,
+					},
+				},
+				data: {
+					roomId: input.roomId,
+					fieldId: input.fieldId,
+					year: input.semester.year,
+					season: input.semester.season,
+					description: input.description,
+				},
+			})
+		}),
 })
