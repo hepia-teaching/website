@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { dataToEsm } from '@rollup/pluginutils'
+
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const { data: courses } = await useAsyncData('my-courses', () =>
 	$trpc.course.myCourses.query()
@@ -17,7 +20,7 @@ const { data: courses } = await useAsyncData('my-courses', () =>
 				v-for="(course, key) in courses"
 				:key="key"
 				:to="`/courses/${course.fieldId}-${course.roomId}-${course.season}-${course.year}`"
-				class="card bg-base-100 shadow-xl"
+				class="card m-3 bg-base-100 shadow-xl"
 			>
 				<div class="card-body">
 					<h2 class="card-title">{{ course.field.name }}</h2>
@@ -33,7 +36,7 @@ const { data: courses } = await useAsyncData('my-courses', () =>
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"
-					class="h-6 w-6 flex-shrink-0 stroke-current"
+					class="h-6 w-6 flex-shrink-0 stroke-white"
 				>
 					<path
 						stroke-linecap="round"
@@ -42,7 +45,7 @@ const { data: courses } = await useAsyncData('my-courses', () =>
 						d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 					></path>
 				</svg>
-				<span>You don't have any courses</span>
+				<span class="text-slate-100">You don't have any courses</span>
 			</div>
 		</div>
 	</div>

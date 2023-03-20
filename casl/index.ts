@@ -1,4 +1,12 @@
-import { Course, Field, Role, User, Room, Assignements } from '@prisma/client'
+import {
+	Course,
+	Field,
+	Role,
+	User,
+	Room,
+	Assignements,
+	Semester,
+} from '@prisma/client'
 import { PureAbility, AbilityBuilder } from '@casl/ability'
 import { PrismaQuery, Subjects } from '@casl/prisma'
 import { createPrismaAbility } from './prisma'
@@ -10,6 +18,7 @@ export function defineAbilityFor(user: User | null) {
 		Course: Course
 		Field: Field
 		Room: Room
+		Semester: Semester
 		Assignement: Assignements
 	}
 
@@ -44,18 +53,21 @@ export function defineAbilityFor(user: User | null) {
 			can('read', 'User')
 			can('read', 'Room')
 			can('read', 'Assignement')
+			can('read', 'Semester')
 
 			can('create', 'Course')
 			can('create', 'Field')
 			can('create', 'Room')
 			can('create', 'User')
 			can('create', 'Assignement')
+			can('create', 'Semester')
 
 			can('delete', 'Course')
 			can('delete', 'Field')
 			can('delete', 'Room')
 			can('delete', 'User')
 			can('delete', 'Assignement')
+			can('delete', 'Semester')
 
 			can('update', 'Course')
 			can('update', 'Field')

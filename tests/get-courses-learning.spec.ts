@@ -8,12 +8,11 @@ const admin: Pick<User, 'email' | 'role'> = {
 	role: 'Admin',
 }
 
-const student: Pick<User, 'email' | 'role'> = {
-	email: faker.datatype.uuid() + '@hepia.com',
-	role: 'Student',
+const field: Pick<Field, 'name'> = {
+	name: faker.datatype.uuid(),
 }
 
-const field: Pick<Field, 'name'> = {
+const field1: Pick<Field, 'name'> = {
 	name: faker.datatype.uuid(),
 }
 
@@ -28,6 +27,7 @@ const semester: Semester = {
 }
 
 const courseDescription = faker.datatype.uuid()
+const courseDescription1 = faker.datatype.uuid()
 
 const userCookies = new Map<User['email'], Cookie>()
 
@@ -36,6 +36,10 @@ test.beforeAll(async () => {
 
 	const createdField = await prisma.field.create({
 		data: field,
+	})
+
+	const createdField1 = await prisma.field.create({
+		data: field1,
 	})
 
 	const createdRoom = await prisma.room.create({
@@ -67,8 +71,14 @@ test.beforeAll(async () => {
 		},
 	})
 
-	await prisma.user.create({
-		data: student,
+	await prisma.course.create({
+		data: {
+			fieldId: createdField1.id,
+			roomId: createdRoom.id,
+			season: semester.season,
+			year: semester.year,
+			description: courseDescription1,
+		},
 	})
 
 	const createdAdmin = await prisma.user.create({
@@ -79,7 +89,7 @@ test.beforeAll(async () => {
 	userCookies.set(createdAdmin.email, cookie)
 })
 
-test(`Create assignement as teacher`, async ({ browser }) => {
+test('Get courses as admin', async ({ browser }) => {
 	const cookie = userCookies.get(admin.email)
 
 	if (!cookie) {
@@ -95,18 +105,11 @@ test(`Create assignement as teacher`, async ({ browser }) => {
 		'Assign Courses to Students'
 	)
 
-	const responsePromise = page.waitForResponse(
-		'http://localhost:3000/api/trpc/learning.create?batch=1'
-	)
-
 	await page.getByTestId('course').selectOption({
 		label: field.name,
 	})
-	await page.check('text=' + student.email)
-	await page.getByText('submit').click()
 
-	const createResponse = await responsePromise
-
-	expect(createResponse.request().method()).toBe('POST')
-	expect(createResponse.status()).toBe(200)
+	await page.getByTestId('course').selectOption({
+		label: field1.name,
+	})
 })

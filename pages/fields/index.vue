@@ -3,16 +3,22 @@ import { Field } from '@prisma/client'
 import { subject } from '@casl/ability'
 
 const { $trpc } = useNuxtApp()
+const toasts = useToastStore()
 
 const { data: fields, refresh } = await useAsyncData('fields', () =>
 	$trpc.field.list.query()
 )
 
 async function onClickDelete(field: Field) {
-	await $trpc.field.delete.mutate({
-		id: field.id,
-	})
-	await refresh()
+	try {
+		await $trpc.field.delete.mutate({
+			id: field.id,
+		})
+		await refresh()
+		toasts.success('Successfully deleted field.')
+	} catch (e) {
+		toasts.error(e)
+	}
 }
 </script>
 

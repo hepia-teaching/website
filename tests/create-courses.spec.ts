@@ -8,11 +8,6 @@ const admin: Pick<User, 'email' | 'role'> = {
 	role: 'Admin',
 }
 
-const student: Pick<User, 'email' | 'role'> = {
-	email: faker.datatype.uuid() + '@hepia.com',
-	role: 'Student',
-}
-
 const field: Pick<Field, 'name'> = {
 	name: faker.datatype.uuid(),
 }
@@ -57,19 +52,15 @@ test.beforeAll(async () => {
 		})
 	}
 
-	await prisma.course.create({
-		data: {
-			fieldId: createdField.id,
-			roomId: createdRoom.id,
-			season: semester.season,
-			year: semester.year,
-			description: courseDescription,
-		},
-	})
-
-	await prisma.user.create({
-		data: student,
-	})
+	// await prisma.course.create({
+	// 	data: {
+	// 		fieldId: createdField.id,
+	// 		roomId: createdRoom.id,
+	// 		season: semester.season,
+	// 		year: semester.year,
+	// 		description: courseDescription,
+	// 	},
+	// })
 
 	const createdAdmin = await prisma.user.create({
 		data: admin,
@@ -79,7 +70,7 @@ test.beforeAll(async () => {
 	userCookies.set(createdAdmin.email, cookie)
 })
 
-test(`Create assignement as teacher`, async ({ browser }) => {
+test(`Create course as admin`, async ({ browser }) => {
 	const cookie = userCookies.get(admin.email)
 
 	if (!cookie) {
@@ -90,19 +81,25 @@ test(`Create assignement as teacher`, async ({ browser }) => {
 	await browserContext.addCookies([cookie])
 	const page = await browserContext.newPage()
 
-	await page.goto('http://localhost:3000/learning/create')
-	await expect(page.getByTestId('homepage-title')).toHaveText(
-		'Assign Courses to Students'
-	)
+	await page.goto('http://localhost:3000/courses/create')
+	await expect(page.getByTestId('homepage-title')).toHaveText('Create a course')
 
 	const responsePromise = page.waitForResponse(
-		'http://localhost:3000/api/trpc/learning.create?batch=1'
+		'http://localhost:3000/api/trpc/course.create?batch=1'
 	)
 
-	await page.getByTestId('course').selectOption({
+	await page.getByTestId('room').selectOption({
+		label: room.number,
+	})
+
+	await page.getByTestId('field').selectOption({
 		label: field.name,
 	})
-	await page.check('text=' + student.email)
+
+	await page.getByTestId('semester').selectOption({
+		label: semester.name,
+	})
+
 	await page.getByText('submit').click()
 
 	const createResponse = await responsePromise
