@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { deleteSchema, getRouteParamsSchema } from '@/zod/assignment'
-import dayjs from 'dayjs'
-import toast from '~~/plugins/toast'
 
 const { $trpc } = useNuxtApp()
 const toasts = useToastStore()
@@ -17,33 +15,20 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 		roomId: assignement.roomId,
 		year: assignement.year,
 		season: assignement.season,
-		description: assignement.description,
-		estimated_time: assignement.estimated_time,
-		startDate: dayjs(assignement.startDate).format('YYYY-MM-DD'),
-		endDate: assignement.endDate
-			? dayjs(assignement.endDate).format('YYYY-MM-DD')
-			: undefined,
 	},
 })
 
 const router = useRouter()
 
-async function submit({
-	startDate,
-	endDate,
-	...values
-}: z.infer<typeof deleteSchema>) {
+async function submit(values: z.infer<typeof deleteSchema>) {
 	try {
-		await $trpc.assignment.delete.mutate({
-			...values,
-			startDate: dayjs(startDate).toISOString(),
-			endDate: endDate ? dayjs(endDate).toISOString() : undefined,
-		})
+		await $trpc.assignment.delete.mutate(values)
 		reset()
 		router.push(
 			`/courses/${values.fieldId}-${values.roomId}-${values.season}-${values.year}`
 		)
 		toasts.success('Successfully deleted assignment')
+		refreshNuxtData('course')
 	} catch (e) {
 		toasts.error(e)
 	}
@@ -74,30 +59,6 @@ async function submit({
 			<ZodKit
 				type="hidden"
 				name="season"
-			/>
-			<ZodKit
-				label="Start Date"
-				name="startDate"
-				type="date"
-				disabled="true"
-			/>
-			<ZodKit
-				label="End Date"
-				name="endDate"
-				type="date"
-				disabled="true"
-			/>
-			<ZodKit
-				label="Estimated Time"
-				name="estimated_time"
-				type="number"
-				disabled="true"
-			/>
-			<ZodKit
-				label="Description"
-				name="description"
-				type="textarea"
-				disabled="true"
 			/>
 			<NuxtLink
 				:to="`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"

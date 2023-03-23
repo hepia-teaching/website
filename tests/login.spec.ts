@@ -2,23 +2,25 @@ import { test, expect } from '@playwright/test'
 import { PrismaClient, User } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 
-const users: Pick<User, 'email' | 'role'>[] = [
-	{
-		email: faker.datatype.uuid() + '@hepia.com',
-		role: 'Teacher',
-	},
-	{
-		email: faker.datatype.uuid() + '@hepia.com',
-		role: 'Student',
-	},
-	{
-		email: faker.datatype.uuid() + '@hepia.com',
-		role: 'Admin',
-	},
-]
+let users: Pick<User, 'email' | 'role'>[] = []
 
-test.beforeAll(async () => {
+test.beforeEach(async () => {
 	const prisma = new PrismaClient()
+
+	users = [
+		{
+			email: faker.datatype.uuid() + '@hepia.com',
+			role: 'Teacher',
+		},
+		{
+			email: faker.datatype.uuid() + '@hepia.com',
+			role: 'Student',
+		},
+		{
+			email: faker.datatype.uuid() + '@hepia.com',
+			role: 'Admin',
+		},
+	]
 
 	await prisma.user.createMany({
 		data: users,

@@ -6,38 +6,20 @@ definePageMeta({
 	layout: 'full',
 })
 
+const props = defineProps<{
+	course: Awaited<ReturnType<typeof $trpc.course.get.query>>
+}>()
+
 const { $trpc, $dayjs } = useNuxtApp()
 const router = useRouter()
 const toasts = useToastStore()
 
-const courses = await $trpc.course.list.query()
-
-const coursesOptions = courses.map((course) => ({
-	label: course.description || `${course.field.name}`,
-	value: {
-		roomId: course.roomId,
-		fieldId: course.fieldId,
-		semester: {
-			year: course.year,
-			season: course.season,
-		},
-	},
-}))
-
-let defaultCourse = coursesOptions[0]?.value
-
-if (!defaultCourse) {
-	throw new Error("There's no courses")
-}
-
-const selectedCourse = ref(defaultCourse)
 const selectedEstimatedTime = ref(10)
 const selectedStartDate = ref($dayjs.utc().startOf('day').format('YYYY-MM-DD'))
 const selectedEndDate = ref(
 	$dayjs.utc().startOf('day').add(7, 'day').format('YYYY-MM-DD')
 )
 
-watch(selectedCourse, () => refreshNuxtData('workload'))
 watch(selectedStartDate, () => refreshNuxtData('workload'))
 watch(selectedEndDate, () => refreshNuxtData('workload'))
 
@@ -45,9 +27,12 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: createSchema,
 	initialValues: {
 		course: {
-			roomId: defaultCourse.roomId,
-			fieldId: defaultCourse.fieldId,
-			semester: defaultCourse.semester,
+			roomId: props.course.roomId,
+			fieldId: props.course.fieldId,
+			semester: {
+				year: props.course.year,
+				season: props.course.season,
+			},
 		},
 		estimate_time: selectedEstimatedTime.value,
 		startDate: $dayjs
@@ -69,17 +54,18 @@ async function submit(values: z.infer<typeof createSchema>) {
 			`/courses/${values.course.fieldId}-${values.course.roomId}-${values.course.semester.season}-${values.course.semester.year}`
 		)
 		toasts.success('Successfully added assignment.')
+		refreshNuxtData('course')
 	} catch (e) {
 		toasts.error(e)
 	}
 }
 
-const { data, error } = await useAsyncData('workload', () =>
+const { data } = await useAsyncData('workload', () =>
 	$trpc.assignment.workloadAssignments.query({
-		roomId: selectedCourse.value.roomId,
-		fieldId: selectedCourse.value.fieldId,
-		year: selectedCourse.value.semester.year,
-		season: selectedCourse.value.semester.season,
+		roomId: props.course.roomId,
+		fieldId: props.course.fieldId,
+		year: props.course.year,
+		season: props.course.season,
 		startDate: $dayjs
 			.utc(selectedStartDate.value, 'YYYY-MM-DD')
 			.startOf('day')
@@ -90,8 +76,6 @@ const { data, error } = await useAsyncData('workload', () =>
 			.toISOString(),
 	})
 )
-
-watchEffect(() => console.log(error.value))
 </script>
 
 <template>
@@ -101,16 +85,10 @@ watchEffect(() => console.log(error.value))
 		</div>
 		<div class="col-span-2 flex flex-col gap-3 lg:col-span-1">
 			<ZodForm @submit="submit">
-				<span class="hidden">
-					<ZodKit
-						v-model="selectedCourse"
-						label="Course"
-						type="select"
-						name="course"
-						:options="coursesOptions"
-						data-testid="course"
-					/>
-				</span>
+				<ZodKit
+					name="course"
+					type="hidden"
+				/>
 				<ZodKit
 					v-model="selectedStartDate"
 					:max="selectedEndDate"
