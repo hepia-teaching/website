@@ -118,9 +118,12 @@ test(`Delete an assignement as teacher`, async ({ browser }) => {
 	const page = await browserContext.newPage()
 
 	const { id, fieldId, roomId, season, year } = createdAssignement
+	const course = [fieldId, roomId, season, year].join('-')
+
 	let res = await page.goto(
-		`http://localhost:3000/courses/${fieldId}-${roomId}-${season}-${year}/assignements/${id}/delete`
+		`http://localhost:3000/courses/${course}/assignements/${id}/delete`
 	)
+
 	expect(res?.status()).toBe(200)
 
 	await expect(page.getByTestId('homepage-title')).toHaveText(
