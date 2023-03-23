@@ -122,7 +122,9 @@ test(`Edit an assignement as teacher`, async ({ browser }) => {
 	const page = await browserContext.newPage()
 
 	const course = [fieldId, roomId, season, year].join('-')
-	await page.goto(`http://localhost:3000/${course}/assignements/${id}/edit`)
+	await page.goto(
+		`http://localhost:3000/courses/${course}/assignements/${id}/edit`
+	)
 
 	await expect(page.getByTestId('homepage-title')).toHaveText(
 		'Edit an Assignement'
