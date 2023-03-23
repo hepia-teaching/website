@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InformationCircleIcon from '@heroicons/vue/24/outline/InformationCircleIcon'
+import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 const { $trpc, $dayjs } = useNuxtApp()
 
 const props = defineProps<{

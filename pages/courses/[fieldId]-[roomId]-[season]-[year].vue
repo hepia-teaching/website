@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getRouteParamsSchema } from '@/zod/course'
-import ExclamationTriangleIcon from '@heroicons/vue/24/outline/ExclamationTriangleIcon'
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
