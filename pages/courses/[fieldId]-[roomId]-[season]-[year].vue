@@ -15,15 +15,10 @@ if (!course.value) {
 </script>
 
 <template>
-	<div
+	<NuxtPage
 		v-if="course"
-		class="flex flex-col gap-3"
-	>
-		<FancyTitle
-			>{{ course.field.name }} {{ course.season }} {{ course.year }}</FancyTitle
-		>
-		<NuxtPage :course="course" />
-	</div>
+		:course="course"
+	/>
 	<div
 		v-else
 		class="alert alert-error shadow-lg"

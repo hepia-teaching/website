@@ -101,7 +101,7 @@ test(`Create assignement as teacher`, async ({ browser }) => {
 	const page = await browserContext.newPage()
 
 	await page.goto(
-		`http://localhost:3000/courses/${createdCourse.fieldId}-${createdCourse.roomId}-${createdCourse.season}-${createdCourse.season}/assignements/create`
+		`http://localhost:3000/courses/${createdCourse.fieldId}-${createdCourse.roomId}-${createdCourse.season}-${createdCourse.year}/assignements/create`
 	)
 
 	await expect(page.getByTestId('homepage-title')).toHaveText(

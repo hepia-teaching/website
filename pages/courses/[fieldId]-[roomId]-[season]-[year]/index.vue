@@ -13,7 +13,10 @@ const baseUrl = computed(
 </script>
 
 <template>
-	<div class="flex gap-3">
+	<div class="flex flex-col gap-3">
+		<FancyTitle
+			>{{ course.field.name }} {{ course.season }} {{ course.year }}</FancyTitle
+		>
 		<ul class="flex flex-grow flex-col gap-1">
 			<li
 				v-for="assignement in props.course.assignements"
