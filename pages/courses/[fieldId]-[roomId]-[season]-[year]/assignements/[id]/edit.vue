@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { updateSchema, getRouteParamsSchema } from '@/zod/assignment'
-import dayjs from 'dayjs'
 
-const { $trpc } = useNuxtApp()
+const { $trpc, $dayjs } = useNuxtApp()
 const toasts = useToastStore()
 const params = useParams(getRouteParamsSchema)
 const assignement = await $trpc.assignment.get.query(params)
@@ -18,9 +17,9 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 		season: assignement.season,
 		description: assignement.description,
 		estimated_time: assignement.estimated_time,
-		startDate: dayjs(assignement.startDate).format('YYYY-MM-DD'),
+		startDate: $dayjs(assignement.startDate).format('YYYY-MM-DD'),
 		endDate: assignement.endDate
-			? dayjs(assignement.endDate).format('YYYY-MM-DD')
+			? $dayjs(assignement.endDate).format('YYYY-MM-DD')
 			: undefined,
 	},
 })
@@ -35,8 +34,8 @@ async function submit({
 	try {
 		await $trpc.assignment.update.mutate({
 			...values,
-			startDate: dayjs(startDate).toISOString(),
-			endDate: endDate ? dayjs(endDate).toISOString() : undefined,
+			startDate: $dayjs(startDate).toISOString(),
+			endDate: endDate ? $dayjs(endDate).toISOString() : undefined,
 		})
 
 		reset()
@@ -44,6 +43,7 @@ async function submit({
 			`/courses/${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`
 		)
 		toasts.success('Successfully updated assignment.')
+		refreshNuxtData('course')
 	} catch (e) {
 		toasts.error(e)
 	}

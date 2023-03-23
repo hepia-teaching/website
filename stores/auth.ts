@@ -21,6 +21,8 @@ export const useAuthStore = defineStore('auth', () => {
 	}
 
 	async function logout() {
+		if (!loggedIn.value) return
+
 		const { $trpc } = useNuxtApp()
 
 		try {

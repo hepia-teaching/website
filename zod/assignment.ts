@@ -33,10 +33,6 @@ export const deleteSchema = z.object({
 	fieldId: createCourseSchema.shape.fieldId,
 	year: createCourseSchema.shape.semester.shape.year,
 	season: createCourseSchema.shape.semester.shape.season,
-	startDate: z.string(),
-	endDate: z.string().optional(),
-	description,
-	estimated_time: z.coerce.number().min(0),
 })
 
 export const getSchema = z.object({

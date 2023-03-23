@@ -1,21 +1,15 @@
 <script setup lang="ts">
-import { z } from 'zod'
-import { Assignements } from '@prisma/client'
-import { deleteSchema } from '@/zod/assignment'
-import dayjs from 'dayjs'
-import { subject } from '@casl/ability'
-
-const { $trpc } = useNuxtApp()
-
-const router = useRouter()
-
-const { ZodForm, ZodKit, reset } = useZodFormKit({
-	schema: deleteSchema,
-})
+import InformationCircleIcon from '@heroicons/vue/24/outline/InformationCircleIcon'
+const { $trpc, $dayjs } = useNuxtApp()
 
 const props = defineProps<{
 	course: Awaited<ReturnType<typeof $trpc.course.get.query>>
 }>()
+
+const baseUrl = computed(
+	() =>
+		`/courses/${props.course.fieldId}-${props.course.roomId}-${props.course.season}-${props.course.year}`
+)
 </script>
 
 <template>
@@ -30,29 +24,38 @@ const props = defineProps<{
 					<span class="text-xl font-bold">{{ assignement.description }}</span>
 					<span
 						>Due date:
-						{{ dayjs(assignement.endDate).format('DD-MM-YYYY') }}</span
+						{{ $dayjs(assignement.endDate).format('DD-MM-YYYY') }}</span
 					>
 				</div>
 				<div class="btn-group">
 					<NuxtLink
-						:to="`/assignements/edit/${assignement.id}-${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
+						:to="`${baseUrl}/assignements/${assignement.id}/edit`"
 						class="btn-outline btn btn-sm"
 					>
 						Edit
 					</NuxtLink>
 
 					<NuxtLink
-						:to="`/assignements/delete/${assignement.id}-${assignement.fieldId}-${assignement.roomId}-${assignement.season}-${assignement.year}`"
+						:to="`${baseUrl}/assignements/${assignement.id}/delete`"
 						class="btn-outline btn btn-error btn-sm"
 					>
 						Delete
 					</NuxtLink>
 				</div>
 			</li>
+			<div
+				v-if="props.course.assignements.length === 0"
+				class="alert alert-info shadow-lg"
+			>
+				<div>
+					<InformationCircleIcon class="h-6 w-6" />
+					<span>There are no assignements</span>
+				</div>
+			</div>
 		</ul>
 		<aside>
 			<NuxtLink
-				to="/assignements/create"
+				:to="`${baseUrl}/assignements/create`"
 				class="btn btn-primary"
 			>
 				Add assignement
