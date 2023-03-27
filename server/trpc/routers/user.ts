@@ -1,5 +1,5 @@
 import { protectedProcedure, publicProcedure, router } from '../trpc'
-import { createSchema, listSchema } from '@/zod/user'
+import { createSchema, listSchema, updateSchema } from '@/zod/user'
 import { loginSchema } from '@/zod/auth'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
@@ -62,4 +62,24 @@ export const userRouter = router({
 				},
 			})
 		}),
+		update: protectedProcedure
+		.input(updateSchema)
+		.mutation(async ({ input, ctx }) => {
+			if (ctx.ability.cannot('update', 'User')) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
+			return await ctx.prisma.user.update({
+				where: {
+					id: input.id,
+					},
+				},
+				data: {
+					id: input.id,
+					email: input.email,
+					role: input.role,
+			})
+	}),
 })

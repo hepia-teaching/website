@@ -14,7 +14,19 @@ export const deleteSchema = z.object({
 
 export const listSchema = z
 	.object({
-		role: z.nativeEnum(Role),
+		role: 	z.nativeEnum(Role),
 	})
 	.partial()
 	.optional()
+export const getRouteParamsSchema = z.object({
+	id: z.coerce.number(),
+})
+export const updateSchema = z.object({
+	id: z.coerce.number(),
+	email,
+	role: z.nativeEnum(Role),
+})
+export const getSchema = z.object({
+	email,
+	role: z.nativeEnum(Role),
+})
