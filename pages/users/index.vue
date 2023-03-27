@@ -52,7 +52,7 @@ async function onClickDelete(user: User) {
 					</th>
 					<th>
 						<NuxtLink
-							:to="`/user/edit/${user.id}`"
+							:to="`/users/edit/${user.id}-${user.role}-${user.email}`"
 							class="btn-outline btn btn-sm"
 							>
 							Edit
