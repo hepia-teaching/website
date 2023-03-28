@@ -41,7 +41,7 @@ async function submit(values: z.infer<typeof updateSchema>) {
 		<ZodForm @submit="submit">
 			<ZodKit
 				type="hidden"
-				disabled="true"
+				disabled
 				name="id"
 			/>
 			<ZodKit

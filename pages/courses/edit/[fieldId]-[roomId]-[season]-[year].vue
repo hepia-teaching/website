@@ -65,21 +65,21 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 				label="Room ID"
 				name="roomId"
 				type="select"
-				disabled="true"
+				disabled
 				:options="roomOptions"
 			/>
 			<ZodKit
 				label="Field ID"
 				name="fieldId"
 				type="select"
-				disabled="true"
+				disabled
 				:options="fieldOptions"
 			/>
 			<ZodKit
 				label="Semester"
 				name="semester"
 				type="select"
-				disabled="true"
+				disabled
 				:options="semesterOptions"
 			/>
 			<ZodKit
