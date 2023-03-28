@@ -1,5 +1,5 @@
 import { protectedProcedure, publicProcedure, router } from '../trpc'
-import { createSchema, listSchema } from '@/zod/user'
+import { createSchema, listSchema, getSchema, updateSchema } from '@/zod/user'
 import { loginSchema } from '@/zod/auth'
 import { TRPCError } from '@trpc/server'
 import { subject } from '@casl/ability'
@@ -59,6 +59,44 @@ export const userRouter = router({
 			await ctx.prisma.user.delete({
 				where: {
 					email: input.email,
+				},
+			})
+		}),
+	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
+		const user = await ctx.prisma.user.findUnique({
+			where: input,
+		})
+
+		if (!user) {
+			throw new TRPCError({
+				code: 'NOT_FOUND',
+			})
+		}
+
+		if (ctx.ability.cannot('read', subject('User', user))) {
+			throw new TRPCError({
+				code: 'FORBIDDEN',
+			})
+		}
+
+		return user
+	}),
+	update: protectedProcedure
+		.input(updateSchema)
+		.mutation(async ({ input, ctx }) => {
+			if (ctx.ability.cannot('update', 'User')) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+				})
+			}
+
+			return await ctx.prisma.user.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					email: input.email,
+					role: input.role,
 				},
 			})
 		}),

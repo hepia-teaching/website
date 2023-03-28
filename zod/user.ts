@@ -18,3 +18,17 @@ export const listSchema = z
 	})
 	.partial()
 	.optional()
+
+export const getRouteParamsSchema = z.object({
+	id: z.coerce.number(),
+})
+
+export const updateSchema = z.object({
+	id: z.coerce.number(),
+	email,
+	role: z.nativeEnum(Role),
+})
+
+export const getSchema = z.object({
+	id: z.coerce.number(),
+})
