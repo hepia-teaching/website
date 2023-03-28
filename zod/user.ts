@@ -14,7 +14,7 @@ export const deleteSchema = z.object({
 
 export const listSchema = z
 	.object({
-		role: 	z.nativeEnum(Role),
+		role: z.nativeEnum(Role),
 	})
 	.partial()
 	.optional()

@@ -8,7 +8,7 @@ import test from 'node:test'
 const { $trpc } = useNuxtApp()
 const params = useParams(getRouteParamsSchema)
 const user = await $trpc.user.get.query(params)
-console.log("PARAM" + params)
+console.log('PARAM' + params)
 const { ZodForm, ZodKit, reset } = useZodFormKit({
 	schema: updateSchema,
 	initialValues: {
@@ -34,10 +34,8 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 		email: values.email,
 	})
 	reset()
-	router.push(
-		`/users?role=Student`
-	)
-}	
+	router.push(`/users?role=Student`)
+}
 </script>
 
 <template>
