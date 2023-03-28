@@ -18,15 +18,20 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 })
 
 const router = useRouter()
+const toast = useToastStore()
 
 async function submit(values: z.infer<typeof updateSchema>) {
-	const updated = await $trpc.user.update.mutate({
-		id: values.id,
-		role: values.role,
-		email: values.email,
-	})
-	reset()
-	router.push(`/users?role=${updated.role}`)
+	try {
+		const updated = await $trpc.user.update.mutate({
+			id: values.id,
+			role: values.role,
+			email: values.email,
+		})
+		reset()
+		router.push(`/users?role=${updated.role}`)
+	} catch (e) {
+		toast.error(e)
+	}
 }
 </script>
 
