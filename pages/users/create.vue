@@ -40,6 +40,7 @@ async function submit(values: z.infer<typeof createSchema>) {
 				label="Role"
 				type="select"
 				name="role"
+				disabled="true"
 				:options="Role"
 			/>
 		</ZodForm>
