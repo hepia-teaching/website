@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { updateSchema, getRouteParamsSchema } from '@/zod/user'
+import { Role } from '@prisma/client'
 import dayjs from 'dayjs'
 import { label } from '@formkit/inputs'
 import test from 'node:test'
@@ -22,6 +23,7 @@ const { ZodForm, ZodKit, reset } = useZodFormKit({
 // 		useAsyncData('user', () => $trpc.user.list.query()),
 // 	]
 // )
+const fieldOptions = Role
 
 const router = useRouter()
 async function submit({ ...values }: z.infer<typeof updateSchema>) {
@@ -33,7 +35,7 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 	})
 	reset()
 	router.push(
-		`/users/edit/${user.id}-${user.role}-${user.email}`
+		`/users?role=Student`
 	)
 }	
 </script>
@@ -45,6 +47,7 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 			<ZodKit
 				label="id"
 				type="number"
+				disabled="true"
 				name="id"
 			/>
 			<ZodKit
@@ -54,8 +57,9 @@ async function submit({ ...values }: z.infer<typeof updateSchema>) {
 			/>
 			<ZodKit
 				label="role"
-				type="text"
+				type="select"
 				name="role"
+				:options="fieldOptions"
 			/>
 		</ZodForm>
 	</div>
