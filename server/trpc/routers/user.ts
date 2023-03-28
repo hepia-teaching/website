@@ -64,9 +64,7 @@ export const userRouter = router({
 		}),
 	get: protectedProcedure.input(getSchema).query(async ({ input, ctx }) => {
 		const user = await ctx.prisma.user.findUnique({
-			where: {
-				id: input.id,
-			},
+			where: input,
 		})
 
 		if (!user) {
@@ -97,7 +95,6 @@ export const userRouter = router({
 					id: input.id,
 				},
 				data: {
-					id: input.id,
 					email: input.email,
 					role: input.role,
 				},
