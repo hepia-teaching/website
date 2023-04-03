@@ -46,7 +46,7 @@ interface Test {
 }
 
 let model = reactive({
-	teacherSelected: teachersOptions ? teachersOptions[0].value : 0,
+	teacherSelected: 0,
 	courseSelected: {
 		roomId: 0,
 		fieldId: 0,
@@ -63,6 +63,7 @@ const [{ data: coursesinit }] = await Promise.all([
 	),
 ])
 
+model.teacherSelected = test
 model.courseSelected =
 	coursesinit.value !== null ? coursesinit.value[0] : model.courseSelected
 
