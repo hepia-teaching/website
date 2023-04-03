@@ -6,6 +6,7 @@ const actions = [
 	{ to: `/users/create?role=${Role.Teacher}`, text: 'Add a teacher' },
 	{ to: `/users/create?role=${Role.Student}`, text: 'Add a student' },
 	{ to: '/teaching/create', text: 'Assign a course' },
+	{ to: '/teaching/delete', text: 'Unassign a course' },
 	{ to: `/semesters/create`, text: 'Add a semester' },
 	{ to: `/fields/create`, text: 'Add a field' },
 	{ to: `/rooms/create`, text: 'Add a room' },
@@ -26,17 +27,9 @@ const listings = [
 	<div class="mx-auto flex h-full flex-col gap-3">
 		<div class="divider">Actions</div>
 		<div class="grid grid-cols-2 gap-3">
-			<NuxtLink
-				v-for="{ to, text } in actions"
-				:key="to"
-				:to="to"
-				class="card bg-base-100 shadow-xl"
-			>
+			<NuxtLink v-for="{ to, text } in actions" :key="to" :to="to" class="card bg-base-100 shadow-xl">
 				<div class="card-body">
-					<h2
-						class="card-title"
-						data-testid="text"
-					>
+					<h2 class="card-title" data-testid="text">
 						{{ text }}
 					</h2>
 				</div>
@@ -44,12 +37,7 @@ const listings = [
 		</div>
 		<div class="divider">Listing</div>
 		<div class="grid grid-cols-2 gap-3">
-			<NuxtLink
-				v-for="{ to, text } in listings"
-				:key="to"
-				:to="to"
-				class="card bg-base-100 shadow-xl"
-			>
+			<NuxtLink v-for="{ to, text } in listings" :key="to" :to="to" class="card bg-base-100 shadow-xl">
 				<div class="card-body">
 					<h2 class="card-title">{{ text }}</h2>
 				</div>
