@@ -20,21 +20,24 @@ export const teachingRouter = router({
 
 			return teaching
 		}),
-	listMyCourses: protectedProcedure.input(getTeacherSchema).query(async ({ input, ctx }) => {
-		return await ctx.prisma.teaching.findMany({
-			where: {
-				teacherId: input.teacherId,
-			},
-			include: {
-				course: {
-					include: {
-						field: true,
-					}
+	listMyCourses: protectedProcedure
+		.input(getTeacherSchema)
+		.query(async ({ input, ctx }) => {
+			return await ctx.prisma.teaching.findMany({
+				where: {
+					teacherId: input.teacherId,
 				},
-			}
-		})
-	}),
-	delete: protectedProcedure.input(getSchema)
+				include: {
+					course: {
+						include: {
+							field: true,
+						},
+					},
+				},
+			})
+		}),
+	delete: protectedProcedure
+		.input(getSchema)
 		.mutation(async ({ input, ctx }) => {
 			const user = await ctx.prisma.teaching.findUnique({
 				where: {
@@ -43,7 +46,7 @@ export const teachingRouter = router({
 						roomId: input.course.roomId,
 						fieldId: input.course.fieldId,
 						year: input.course.year,
-						season: input.course.season
+						season: input.course.season,
 					},
 				},
 			})
@@ -61,10 +64,9 @@ export const teachingRouter = router({
 						roomId: input.course.roomId,
 						fieldId: input.course.fieldId,
 						year: input.course.year,
-						season: input.course.season
-					}
+						season: input.course.season,
+					},
 				},
 			})
-
 		}),
 })
