@@ -6,6 +6,7 @@ const actions = [
 	{ to: `/users/create?role=${Role.Teacher}`, text: 'Add a teacher' },
 	{ to: `/users/create?role=${Role.Student}`, text: 'Add a student' },
 	{ to: '/teaching/create', text: 'Assign a course' },
+	{ to: '/teaching/delete', text: 'Unassign a course' },
 	{ to: `/semesters/create`, text: 'Add a semester' },
 	{ to: `/fields/create`, text: 'Add a field' },
 	{ to: `/rooms/create`, text: 'Add a room' },
